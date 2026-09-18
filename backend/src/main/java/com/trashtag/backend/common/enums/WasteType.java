@@ -5,7 +5,8 @@ public enum WasteType {
     ELECTRONIC,
     ORGANIC,
     CONSTRUCTION,
+    METAL,
+    GLASS,
     MIXED,
     OTHER
 }
-

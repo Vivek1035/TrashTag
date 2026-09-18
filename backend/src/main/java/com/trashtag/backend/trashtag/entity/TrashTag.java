@@ -70,6 +70,9 @@ public class TrashTag {
     /** Estimated waste in kilograms */
     private Double estimatedWeightKg;
 
+    /** Actual recovered waste in kilograms */
+    private Double recoveredWeightKg;
+
     @Column(length = 500)
     private String primaryImageUrl;
 

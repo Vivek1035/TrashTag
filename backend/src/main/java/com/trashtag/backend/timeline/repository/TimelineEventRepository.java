@@ -6,11 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface TimelineEventRepository extends JpaRepository<TimelineEvent, UUID> {
     Page<TimelineEvent> findByTrashTagIdOrderByCreatedAtAsc(UUID trashTagId, Pageable pageable);
+    List<TimelineEvent> findByTrashTagId(UUID trashTagId);
     Page<TimelineEvent> findByActorId(UUID actorId, Pageable pageable);
 }
-

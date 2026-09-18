@@ -1,4 +1,6 @@
-package com.trashtag.backend.trashtag.service;
+package com.trashtag.backend.trashtag;
+
+import com.trashtag.backend.trashtag.service.TrashTagStateMachine;
 
 import com.trashtag.backend.common.enums.RecoveryStatus;
 import com.trashtag.backend.common.exception.InvalidStatusTransitionException;

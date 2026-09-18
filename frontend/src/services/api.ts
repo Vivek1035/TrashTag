@@ -16,16 +16,63 @@ export interface TimelineEvent {
   createdAt: string;
 }
 
-export interface MissionInfo {
+export interface Mission {
   id: string;
   trashTagId: string;
+  trashTagCode?: string;
+  trashTagTitle?: string;
   title: string;
+  description?: string;
   status: 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
   scheduledDate: string;
+  startedAt?: string;
+  completedAt?: string;
   maxParticipants: number;
-  currentParticipantsCount?: number;
+  currentParticipantsCount: number;
+  joinedByCurrentUser?: boolean;
   meetingPoint?: string;
+  meetingLatitude?: number;
+  meetingLongitude?: number;
   equipmentNeeded?: string;
+  createdBy: string;
+  creatorName?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateMissionInput {
+  title: string;
+  description?: string;
+  trashTagId: string;
+  scheduledDate: string;
+  maxParticipants?: number;
+  targetWasteKg?: number;
+  meetingPoint?: string;
+  meetingLatitude?: number;
+  meetingLongitude?: number;
+  equipmentNeeded?: string;
+}
+
+export interface CompleteMissionInput {
+  plasticKg?: number;
+  organicKg?: number;
+  metalKg?: number;
+  glassKg?: number;
+  otherKg?: number;
+  totalKg?: number;
+  afterImageUrl?: string;
+  notes?: string;
+}
+
+export interface Participant {
+  id: string;
+  missionId: string;
+  userId: string;
+  userName: string;
+  userAvatarUrl?: string;
+  checkedIn: boolean;
+  checkedInAt?: string;
+  joinedAt?: string;
 }
 
 export async function fetchTrashTags(params?: {
@@ -128,6 +175,162 @@ export async function verifyTrashTagApi(idOrTagCode: string, token: string): Pro
   return json.data;
 }
 
+// ── Cleanup Mission APIs ───────────────────────────────────────
+
+export async function fetchMissions(params?: {
+  status?: string;
+  trashTagId?: string;
+  page?: number;
+  size?: number;
+  token?: string;
+}): Promise<Mission[]> {
+  try {
+    const url = new URL(`${API_BASE}/missions`);
+    if (params?.status) url.searchParams.append('status', params.status);
+    if (params?.trashTagId) url.searchParams.append('trashTagId', params.trashTagId);
+    url.searchParams.append('page', String(params?.page || 0));
+    url.searchParams.append('size', String(params?.size || 50));
+
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (params?.token) headers['Authorization'] = `Bearer ${params.token}`;
+
+    const res = await fetch(url.toString(), { headers, cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    return data.content || data || [];
+  } catch (err) {
+    console.warn('API unavailable for missions, returning mock data:', err);
+    return MOCK_MISSIONS;
+  }
+}
+
+export async function fetchMissionById(id: string, token?: string): Promise<Mission> {
+  try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/missions/${id}`, { headers, cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn(`API unavailable for mission ${id}, returning mock mission:`, err);
+    const found = MOCK_MISSIONS.find((m) => m.id === id);
+    return found || MOCK_MISSIONS[0];
+  }
+}
+
+export async function createMissionApi(input: CreateMissionInput, token: string): Promise<Mission> {
+  const res = await fetch(`${API_BASE}/missions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to create mission (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function joinMissionApi(missionId: string, token: string): Promise<Mission> {
+  const res = await fetch(`${API_BASE}/missions/${missionId}/join`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to join mission (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function leaveMissionApi(missionId: string, token: string): Promise<Mission> {
+  const res = await fetch(`${API_BASE}/missions/${missionId}/leave`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to leave mission (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function startMissionApi(missionId: string, token: string): Promise<Mission> {
+  const res = await fetch(`${API_BASE}/missions/${missionId}/start`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to start mission (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function completeMissionApi(
+  missionId: string,
+  input: CompleteMissionInput,
+  token: string
+): Promise<Mission> {
+  const res = await fetch(`${API_BASE}/missions/${missionId}/complete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to complete mission (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function fetchMissionParticipants(missionId: string, token?: string): Promise<Participant[]> {
+  try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/missions/${missionId}/participants`, { headers, cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn(`API unavailable for participants of ${missionId}:`, err);
+    return [
+      {
+        id: 'p-1',
+        missionId,
+        userId: 'u-1',
+        userName: 'Alice Green (Organizer)',
+        checkedIn: true,
+        joinedAt: new Date(Date.now() - 86400000).toISOString(),
+      },
+      {
+        id: 'p-2',
+        missionId,
+        userId: 'u-2',
+        userName: 'Carlos Volunteer',
+        checkedIn: false,
+        joinedAt: new Date(Date.now() - 43200000).toISOString(),
+      },
+    ];
+  }
+}
+
 // Demo fallback data
 export const MOCK_TRASH_TAGS: TrashTag[] = [
   {
@@ -184,6 +387,52 @@ export const MOCK_TRASH_TAGS: TrashTag[] = [
     estimatedWeightKg: 200,
     primaryImageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80',
     reportedAt: new Date(Date.now() - 3600000 * 720).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+export const MOCK_MISSIONS: Mission[] = [
+  {
+    id: 'm-1001-uuid',
+    trashTagId: 'tt-1002-uuid',
+    trashTagCode: 'TT-1002',
+    trashTagTitle: 'Industrial E-Waste Dumping Grounds',
+    title: 'Operation Bay E-Waste Recovery',
+    description: 'Volunteer team assembling to haul hazardous e-waste and sort lithium batteries safely.',
+    status: 'ACTIVE',
+    scheduledDate: new Date(Date.now() + 86400000 * 2).toISOString(),
+    startedAt: new Date().toISOString(),
+    maxParticipants: 25,
+    currentParticipantsCount: 14,
+    joinedByCurrentUser: false,
+    meetingPoint: 'Gate B, Industrial Way Lot',
+    meetingLatitude: 37.7833,
+    meetingLongitude: -122.4167,
+    equipmentNeeded: 'Heavy-duty gloves, Steel-toe boots, Safety glasses',
+    createdBy: 'org-1',
+    creatorName: 'Bay Area Cleanup Alliance',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'm-1002-uuid',
+    trashTagId: 'tt-1001-uuid',
+    trashTagCode: 'TT-1001',
+    trashTagTitle: 'Riverbank Illegal Plastic Dump',
+    title: 'Riverbank Plastics Interception',
+    description: 'Join us to sweep 120 kg of single-use plastics before storm runoff reaches the bay.',
+    status: 'UPCOMING',
+    scheduledDate: new Date(Date.now() + 86400000 * 5).toISOString(),
+    maxParticipants: 20,
+    currentParticipantsCount: 8,
+    joinedByCurrentUser: true,
+    meetingPoint: 'River Rd Bridge South Footpath',
+    meetingLatitude: 37.7749,
+    meetingLongitude: -122.4194,
+    equipmentNeeded: 'Trash grabbers, Heavy bags, Waterproof boots',
+    createdBy: 'org-2',
+    creatorName: 'Clean Ocean Network',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },

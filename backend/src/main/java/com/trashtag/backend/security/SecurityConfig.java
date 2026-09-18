@@ -95,8 +95,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
 
-                // ── ORGANIZATION or ADMIN — mission creation ──────────
+                // ── ORGANIZATION or ADMIN — mission creation & management ──
                 .requestMatchers(HttpMethod.POST, "/api/missions").hasAnyRole("ORGANIZATION", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/missions/{id}/start").hasAnyRole("ORGANIZATION", "ADMIN")
 
                 // ── Default: require authentication ───────────────────
                 .anyRequest().authenticated()
