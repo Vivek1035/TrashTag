@@ -36,12 +36,21 @@ public class MonitoringCheckpoint {
     @Builder.Default
     private String status = "PENDING"; // PENDING, VERIFIED, REOPENED
 
+    private Instant completedAt;
+
+    @Column(length = 500)
+    private String evidenceImageUrl;
+
+    private Boolean wasteDetected;
+
     @Column(columnDefinition = "TEXT")
     private String notes;
+
 
     private UUID verifiedBy;
 
     private Instant verifiedAt;
+
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

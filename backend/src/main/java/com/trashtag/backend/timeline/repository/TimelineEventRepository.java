@@ -12,6 +12,10 @@ import java.util.UUID;
 @Repository
 public interface TimelineEventRepository extends JpaRepository<TimelineEvent, UUID> {
     Page<TimelineEvent> findByTrashTagIdOrderByCreatedAtAsc(UUID trashTagId, Pageable pageable);
+    Page<TimelineEvent> findByTrashTagIdOrderByCreatedAtDesc(UUID trashTagId, Pageable pageable);
+    Page<TimelineEvent> findByTrashTagIdAndEventTypeOrderByCreatedAtDesc(UUID trashTagId, String eventType, Pageable pageable);
     List<TimelineEvent> findByTrashTagId(UUID trashTagId);
     Page<TimelineEvent> findByActorId(UUID actorId, Pageable pageable);
+    Page<TimelineEvent> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<TimelineEvent> findByEventTypeOrderByCreatedAtDesc(String eventType, Pageable pageable);
 }

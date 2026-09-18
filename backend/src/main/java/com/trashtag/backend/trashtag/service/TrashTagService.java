@@ -314,6 +314,8 @@ public class TrashTagService {
         return page.map(ev -> TimelineEventResponse.builder()
                 .id(ev.getId().toString())
                 .trashTagId(ev.getTrashTagId().toString())
+                .tagCode(tag.getTagCode())
+                .trashTagTitle(tag.getTitle())
                 .actorId(ev.getActorId().toString())
                 .actorName(userNames.getOrDefault(ev.getActorId(), "Unknown"))
                 .eventType(ev.getEventType())

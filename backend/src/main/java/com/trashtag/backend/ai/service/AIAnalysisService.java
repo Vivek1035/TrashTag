@@ -113,6 +113,16 @@ public class AIAnalysisService {
 
             aiAnalysisRepository.save(doc);
             log.info("Saved AI prevention recommendations document to MongoDB for TrashTag {}", trashTagId);
+
+            // Log TRANSFORMATION_RECOMMENDED TimelineEvent
+            TimelineEvent timelineEvent = TimelineEvent.builder()
+                    .trashTagId(trashTagId)
+                    .actorId(tag.getReporterId() != null ? tag.getReporterId() : UUID.fromString("00000000-0000-0000-0000-000000000000"))
+                    .eventType("TRANSFORMATION_RECOMMENDED")
+                    .title("AI Prevention Plan Generated")
+                    .description("Generated " + response.getStrategies().size() + " prevention recommendations for site transformation.")
+                    .build();
+            timelineEventRepository.save(timelineEvent);
         } catch (Exception e) {
             log.error("Failed to save AI prevention document to MongoDB: {}", e.getMessage());
         }

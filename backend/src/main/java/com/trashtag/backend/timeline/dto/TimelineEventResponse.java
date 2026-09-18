@@ -10,8 +10,11 @@ import java.time.Instant;
 public class TimelineEventResponse {
     private String id;
     private String trashTagId;
+    private String tagCode;
+    private String trashTagTitle;
     private String actorId;
     private String actorName;
+
     private String eventType;
     private String title;
     private String description;

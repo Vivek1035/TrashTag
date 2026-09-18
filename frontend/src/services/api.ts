@@ -5,6 +5,8 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 export interface TimelineEvent {
   id: string;
   trashTagId: string;
+  tagCode?: string;
+  trashTagTitle?: string;
   actorId: string;
   actorName: string;
   eventType: string;
@@ -112,14 +114,22 @@ export interface ClassificationOverrideInput {
 export interface MonitoringCheckpointDTO {
   id: string;
   trashTagId: string;
+  tagCode?: string;
+  trashTagTitle?: string;
+  address?: string;
+  trashTagStatus?: string;
   checkpointDays: number;
   scheduledDate: string;
+  completedDate?: string;
+  image?: string;
+  wasteDetected?: boolean;
   status: string;
   notes?: string;
   verifiedBy?: string;
   verifiedAt?: string;
   createdAt: string;
 }
+
 
 export interface TransformationResponse {
   id: string;
@@ -155,6 +165,26 @@ export interface CompleteTransformationInput {
   description: string;
   afterImageUrl: string;
 }
+
+export interface CompleteMonitoringInput {
+  wasteDetected: boolean;
+  evidenceImageUrl?: string;
+  notes?: string;
+}
+
+export interface MonitoringDashboardMetrics {
+  dueCount: number;
+  completedCount: number;
+  overdueCount: number;
+  sustainedCount: number;
+  reopenedCount: number;
+}
+
+export interface MonitoringDashboardResponse {
+  metrics: MonitoringDashboardMetrics;
+  checkpoints: MonitoringCheckpointDTO[];
+}
+
 
 
 
@@ -217,6 +247,32 @@ export async function fetchTrashTagById(idOrTagCode: string): Promise<TrashTag> 
   }
 }
 
+export async function fetchGlobalTimelineApi(
+  eventType?: string,
+  page: number = 0,
+  size: number = 50
+): Promise<TimelineEvent[]> {
+  try {
+    const url = new URL(`${API_BASE}/timeline`);
+    if (eventType && eventType !== 'ALL') {
+      url.searchParams.append('eventType', eventType);
+    }
+    url.searchParams.append('page', String(page));
+    url.searchParams.append('size', String(size));
+
+    const res = await fetch(url.toString(), {
+      headers: { 'Content-Type': 'application/json' },
+      next: { revalidate: 5 },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.content || json.data?.content || [];
+  } catch (err) {
+    console.warn('API unavailable for global timeline, returning mock stream:', err);
+    return MOCK_GLOBAL_TIMELINE;
+  }
+}
+
 export async function fetchTrashTagTimeline(idOrTagCode: string): Promise<TimelineEvent[]> {
   try {
     const res = await fetch(`${API_BASE}/trash-tags/${idOrTagCode}/timeline`, {
@@ -224,30 +280,34 @@ export async function fetchTrashTagTimeline(idOrTagCode: string): Promise<Timeli
       next: { revalidate: 5 },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json: ApiResponse<PageResponse<TimelineEvent>> = await res.json();
-    return json.data.content || [];
+    const json = await res.json();
+    return json.content || json.data?.content || [];
   } catch (err) {
     console.warn(`API unavailable for timeline ${idOrTagCode}, returning mock timeline:`, err);
     return [
       {
         id: 'te-1',
         trashTagId: idOrTagCode,
+        tagCode: 'TT-1001',
+        trashTagTitle: 'Riverbank Illegal Plastic Dump',
         actorId: 'user-1',
         actorName: 'Alice Green',
         eventType: 'REPORT_CREATED',
-        title: 'Trash Hotspot Tagged',
-        description: 'Hotspot reported with severity HIGH. Initial waste estimated at 120 kg.',
+        title: 'TrashTag Reported',
+        description: 'TrashTag site reported with severity CRITICAL.',
         imageUrl: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=600&q=80',
         createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
       },
       {
         id: 'te-2',
         trashTagId: idOrTagCode,
+        tagCode: 'TT-1001',
+        trashTagTitle: 'Riverbank Illegal Plastic Dump',
         actorId: 'user-ver',
         actorName: 'Verifier Bob',
-        eventType: 'HOTSPOT_VERIFIED',
-        title: 'Hotspot Verified',
-        description: 'Field verifier confirmed illegal dump site coordinates and severity level.',
+        eventType: 'REPORT_VERIFIED',
+        title: 'Report Verified',
+        description: 'Verifier confirmed dump site coordinates and severity level.',
         createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
       },
     ];
@@ -528,6 +588,68 @@ export async function fetchTransformationApi(
   return json.data || json;
 }
 
+export async function fetchMonitoringDashboardApi(
+  params?: { checkpointDays?: number; status?: string; search?: string },
+  token?: string
+): Promise<MonitoringDashboardResponse> {
+  const url = new URL(`${API_BASE}/monitoring`);
+  if (params?.checkpointDays) url.searchParams.append('checkpointDays', String(params.checkpointDays));
+  if (params?.status) url.searchParams.append('status', params.status);
+  if (params?.search) url.searchParams.append('search', params.search);
+
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(url.toString(), { headers, cache: 'no-store' });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to fetch monitoring dashboard (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function initializeMonitoringApi(
+  trashTagId: string,
+  token: string
+): Promise<MonitoringCheckpointDTO[]> {
+  const res = await fetch(`${API_BASE}/trash-tags/${trashTagId}/monitoring`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to initialize monitoring (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function completeMonitoringInspectionApi(
+  checkpointId: string,
+  input: CompleteMonitoringInput,
+  token: string
+): Promise<MonitoringCheckpointDTO> {
+  const res = await fetch(`${API_BASE}/monitoring/${checkpointId}/complete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to submit monitoring inspection (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+
 
 
 
@@ -666,5 +788,70 @@ export const MOCK_MISSIONS: Mission[] = [
     creatorName: 'Clean Ocean Network',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+  },
+];
+
+export const MOCK_GLOBAL_TIMELINE: TimelineEvent[] = [
+  {
+    id: 'gt-1',
+    trashTagId: 'tt-1001-uuid',
+    tagCode: 'TT-1001',
+    trashTagTitle: 'Riverbank Illegal Plastic Dump',
+    actorId: 'user-1',
+    actorName: 'Alice Green',
+    eventType: 'REPORT_CREATED',
+    title: 'TrashTag Reported',
+    description: 'Hotspot reported with severity CRITICAL. Estimated weight 120 kg.',
+    imageUrl: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=600&q=80',
+    createdAt: new Date(Date.now() - 3600000 * 72).toISOString(),
+  },
+  {
+    id: 'gt-2',
+    trashTagId: 'tt-1001-uuid',
+    tagCode: 'TT-1001',
+    trashTagTitle: 'Riverbank Illegal Plastic Dump',
+    actorId: 'user-ver',
+    actorName: 'Verifier Bob',
+    eventType: 'REPORT_VERIFIED',
+    title: 'Report Verified',
+    description: 'Field verifier confirmed illegal dump site coordinates.',
+    createdAt: new Date(Date.now() - 3600000 * 60).toISOString(),
+  },
+  {
+    id: 'gt-3',
+    trashTagId: 'tt-1002-uuid',
+    tagCode: 'TT-1002',
+    trashTagTitle: 'Industrial E-Waste Dumping Grounds',
+    actorId: 'org-1',
+    actorName: 'Bay Area Cleanup Alliance',
+    eventType: 'MISSION_CREATED',
+    title: 'Cleanup Mission Created',
+    description: 'Operation Bay E-Waste Recovery scheduled with 25 volunteer spots.',
+    createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+  },
+  {
+    id: 'gt-4',
+    trashTagId: 'tt-1004-uuid',
+    tagCode: 'TT-1004',
+    trashTagTitle: 'Mission District Alley Recovery',
+    actorId: 'ai-sys',
+    actorName: 'Gemini AI Assistant',
+    eventType: 'TRANSFORMATION_RECOMMENDED',
+    title: 'AI Prevention Plan Generated',
+    description: 'Generated 3 prevention strategies for long-term site conversion.',
+    createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+  },
+  {
+    id: 'gt-5',
+    trashTagId: 'tt-1004-uuid',
+    tagCode: 'TT-1004',
+    trashTagTitle: 'Mission District Alley Recovery',
+    actorId: 'user-4',
+    actorName: 'Community Admin',
+    eventType: 'TRANSFORMATION_COMPLETED',
+    title: 'Site Transformed',
+    description: 'Site converted into community garden plot with barrier planters.',
+    imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=600&q=80',
+    createdAt: new Date(Date.now() - 3600000 * 6).toISOString(),
   },
 ];
