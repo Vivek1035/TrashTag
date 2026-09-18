@@ -7,6 +7,7 @@ import com.trashtag.backend.common.enums.WasteType;
 import com.trashtag.backend.timeline.dto.TimelineEventResponse;
 import com.trashtag.backend.trashtag.dto.CreateTrashTagRequest;
 import com.trashtag.backend.trashtag.dto.TrashTagResponse;
+import com.trashtag.backend.trashtag.dto.VerifyRecoveryRequest;
 import com.trashtag.backend.trashtag.service.TrashTagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,19 @@ public class TrashTagController {
             @PathVariable String id) {
         TrashTagResponse response = trashTagService.verifyTrashTag(id);
         return ResponseEntity.ok(ApiResponse.ok("TrashTag hotspot verified successfully.", response));
+    }
+
+    /**
+     * POST /api/trash-tags/{id}/recovery/verify
+     * Verify clean site recovery for a TrashTag. Restricted to VERIFIER and ADMIN roles.
+     */
+    @PostMapping("/{id}/recovery/verify")
+    @PreAuthorize("hasAnyRole('VERIFIER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<TrashTagResponse>> verifyRecovery(
+            @PathVariable String id,
+            @RequestBody(required = false) VerifyRecoveryRequest request) {
+        TrashTagResponse response = trashTagService.verifyRecovery(id, request);
+        return ResponseEntity.ok(ApiResponse.ok("Hotspot recovery evidence verified successfully.", response));
     }
 
     /**

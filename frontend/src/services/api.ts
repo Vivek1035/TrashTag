@@ -64,6 +64,17 @@ export interface CompleteMissionInput {
   notes?: string;
 }
 
+export interface VerifyRecoveryInput {
+  approved: boolean;
+  notes?: string;
+  evidenceGpsVerified?: boolean;
+  evidenceTimestampVerified?: boolean;
+  evidenceBeforeImageVerified?: boolean;
+  evidenceAfterImageVerified?: boolean;
+  evidenceWasteRecordVerified?: boolean;
+}
+
+
 export interface Participant {
   id: string;
   missionId: string;
@@ -299,6 +310,29 @@ export async function completeMissionApi(
   }
   return await res.json();
 }
+
+export async function verifyRecoveryApi(
+
+  trashTagId: string,
+  input: VerifyRecoveryInput,
+  token: string
+): Promise<TrashTag> {
+  const res = await fetch(`${API_BASE}/trash-tags/${trashTagId}/recovery/verify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to verify recovery (${res.status})`);
+  }
+  const data = await res.json();
+  return data.data || data;
+}
+
 
 export async function fetchMissionParticipants(missionId: string, token?: string): Promise<Participant[]> {
   try {

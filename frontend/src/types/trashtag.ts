@@ -35,8 +35,11 @@ export interface TrashTag {
   longitude: number;
   address?: string;
   estimatedWeightKg?: number;
+  recoveredWeightKg?: number;
   primaryImageUrl?: string;
+  afterImageUrl?: string;
   reportedAt: string;
+
   verifiedAt?: string;
   verifiedBy?: string;
   lastStatusChangedAt?: string;
