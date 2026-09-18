@@ -64,9 +64,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 
-                // Public read — TrashTags
-                .requestMatchers(HttpMethod.GET, "/api/trash-tags").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/trash-tags/{id}").permitAll()
+                // Public read — TrashTags & Timeline
+                .requestMatchers(HttpMethod.GET, "/api/trash-tags/**").permitAll()
 
                 // Public read — Missions
                 .requestMatchers(HttpMethod.GET, "/api/missions").permitAll()
