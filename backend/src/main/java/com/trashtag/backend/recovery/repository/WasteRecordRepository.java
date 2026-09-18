@@ -18,5 +18,8 @@ public interface WasteRecordRepository extends JpaRepository<WasteRecord, UUID> 
 
     @Query("SELECT SUM(w.weightKg) FROM WasteRecord w WHERE w.trashTagId = :trashTagId")
     Double sumWeightByTrashTagId(UUID trashTagId);
+
+    @Query("SELECT SUM(w.weightKg) FROM WasteRecord w WHERE w.recordedBy = :userId")
+    Double sumWeightByRecordedBy(UUID userId);
 }
 

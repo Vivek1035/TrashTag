@@ -194,15 +194,17 @@ public class MissionService {
             timelineEventRepository.save(timelineEvent);
         }
 
-        // Score Event — award 10 points once
-        ScoreEvent scoreEvent = ScoreEvent.builder()
-                .userId(user.getId())
-                .trashTagId(mission.getTrashTagId())
-                .eventType("VOLUNTEER_JOINED")
-                .points(10)
-                .description("Earned 10 pts for joining mission " + mission.getTitle())
-                .build();
-        scoreEventRepository.save(scoreEvent);
+        // Score Event — award 10 points once (MISSION_JOINED)
+        if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(user.getId(), mission.getTrashTagId(), "MISSION_JOINED")) {
+            ScoreEvent scoreEvent = ScoreEvent.builder()
+                    .userId(user.getId())
+                    .trashTagId(mission.getTrashTagId())
+                    .eventType("MISSION_JOINED")
+                    .points(10)
+                    .description("Earned 10 pts for joining mission " + mission.getTitle())
+                    .build();
+            scoreEventRepository.save(scoreEvent);
+        }
 
         long updatedCount = count + 1;
         String creatorName = userRepository.findById(mission.getCreatedBy())
@@ -316,6 +318,18 @@ public class MissionService {
                 .imageUrl(eventImg)
                 .build();
         timelineEventRepository.save(timelineEvent);
+
+        // Score Event — award 30 points for completing cleanup (with duplicate protection)
+        if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(currentUser.getId(), tag.getId(), "CLEANUP_COMPLETED")) {
+            ScoreEvent scoreEvent = ScoreEvent.builder()
+                    .userId(currentUser.getId())
+                    .trashTagId(tag.getId())
+                    .eventType("CLEANUP_COMPLETED")
+                    .points(30)
+                    .description("Earned 30 pts for completing field cleanup on mission " + mission.getTitle())
+                    .build();
+            scoreEventRepository.save(scoreEvent);
+        }
 
         long count = participantRepository.countByMissionId(mission.getId());
         String creatorName = userRepository.findById(mission.getCreatedBy())

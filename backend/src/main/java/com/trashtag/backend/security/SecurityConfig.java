@@ -73,9 +73,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/missions").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/missions/{id}").permitAll()
 
-                // Public read — Leaderboard
+                // Public read — Leaderboard & Dashboard
                 .requestMatchers(HttpMethod.GET, "/api/leaderboard").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/leaderboard/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/dashboard").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/dashboard/**").permitAll()
 
                 // ── Authenticated (any role) ───────────────────────────
                 .requestMatchers(HttpMethod.GET,  "/api/auth/me").authenticated()

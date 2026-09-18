@@ -23,6 +23,10 @@ public interface TrashTagRepository extends JpaRepository<TrashTag, UUID> {
 
     Page<TrashTag> findByReporterId(UUID reporterId, Pageable pageable);
 
+    long countByReporterId(UUID reporterId);
+
+    long countByVerifiedBy(UUID verifiedBy);
+
     long countByStatus(RecoveryStatus status);
 
     @Query("""

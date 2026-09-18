@@ -249,7 +249,7 @@ class MissionIntegrationTest {
         List<ScoreEvent> scoreEvents = scoreEventRepository.findByUserIdOrderByCreatedAtDesc(normalUser.getId());
         assertThat(scoreEvents).hasSize(1);
         assertThat(scoreEvents.get(0).getPoints()).isEqualTo(10);
-        assertThat(scoreEvents.get(0).getEventType()).isEqualTo("VOLUNTEER_JOINED");
+        assertThat(scoreEvents.get(0).getEventType()).isEqualTo("MISSION_JOINED");
 
         // Duplicate join attempt must fail
         mockMvc.perform(post("/api/missions/" + missionId + "/join")

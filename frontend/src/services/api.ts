@@ -172,6 +172,39 @@ export interface CompleteMonitoringInput {
   notes?: string;
 }
 
+export interface UserBadge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  level: string;
+  earnedAt?: string;
+}
+
+export interface LeaderboardUser {
+  rank: number;
+  userId: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string;
+  role: string;
+  points: number;
+  reports: number;
+  missions: number;
+  wasteRecoveredKg: number;
+  recoveries: number;
+  badges: UserBadge[];
+}
+
+export interface LeaderboardResponse {
+  globalTotalScore: number;
+  globalTotalReports: number;
+  globalTotalMissions: number;
+  globalTotalWasteRecoveredKg: number;
+  globalTotalRecoveries: number;
+  rankings: LeaderboardUser[];
+}
+
 export interface MonitoringDashboardMetrics {
   dueCount: number;
   completedCount: number;
@@ -270,6 +303,21 @@ export async function fetchGlobalTimelineApi(
   } catch (err) {
     console.warn('API unavailable for global timeline, returning mock stream:', err);
     return MOCK_GLOBAL_TIMELINE;
+  }
+}
+
+export async function fetchLeaderboardApi(): Promise<LeaderboardResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/leaderboard`, {
+      headers: { 'Content-Type': 'application/json' },
+      next: { revalidate: 10 },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || json;
+  } catch (err) {
+    console.warn('API unavailable for leaderboard, returning mock leaderboard:', err);
+    return MOCK_LEADERBOARD;
   }
 }
 
@@ -855,3 +903,179 @@ export const MOCK_GLOBAL_TIMELINE: TimelineEvent[] = [
     createdAt: new Date(Date.now() - 3600000 * 6).toISOString(),
   },
 ];
+
+export const MOCK_LEADERBOARD: LeaderboardResponse = {
+  globalTotalScore: 1470,
+  globalTotalReports: 12,
+  globalTotalMissions: 8,
+  globalTotalWasteRecoveredKg: 670,
+  globalTotalRecoveries: 5,
+  rankings: [
+    {
+      rank: 1,
+      userId: 'user-1-uuid',
+      username: 'alice_green',
+      displayName: 'Alice Green',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      role: 'USER',
+      points: 820,
+      reports: 8,
+      missions: 5,
+      wasteRecoveredKg: 240,
+      recoveries: 3,
+      badges: [
+        { id: 'b-1', name: 'Hotspot Scout', description: 'Reported 3+ hotspots', icon: '🏷️', level: 'BRONZE' },
+        { id: 'b-2', name: 'Cleanup Volunteer', description: 'Joined 2+ missions', icon: '🧹', level: 'SILVER' },
+        { id: 'b-3', name: 'Recovery Champion', description: 'Recovered 50+ kg waste', icon: '🏆', level: 'GOLD' },
+        { id: 'b-4', name: 'Prevention Builder', description: 'Executed 1+ site transformations', icon: '🌱', level: 'PLATINUM' },
+      ],
+    },
+    {
+      rank: 2,
+      userId: 'user-2-uuid',
+      username: 'carlos_dev',
+      displayName: 'Carlos Dev',
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+      role: 'VERIFIER',
+      points: 450,
+      reports: 3,
+      missions: 3,
+      wasteRecoveredKg: 350,
+      recoveries: 2,
+      badges: [
+        { id: 'b-1', name: 'Hotspot Scout', description: 'Reported 3+ hotspots', icon: '🏷️', level: 'BRONZE' },
+        { id: 'b-3', name: 'Recovery Champion', description: 'Recovered 50+ kg waste', icon: '🏆', level: 'GOLD' },
+      ],
+    },
+    {
+      rank: 3,
+      userId: 'user-3-uuid',
+      username: 'eco_sam',
+      displayName: 'Eco Sam',
+      avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+      role: 'USER',
+      points: 200,
+      reports: 1,
+      missions: 2,
+      wasteRecoveredKg: 80,
+      recoveries: 0,
+      badges: [
+        { id: 'b-2', name: 'Cleanup Volunteer', description: 'Joined 2+ missions', icon: '🧹', level: 'SILVER' },
+      ],
+    },
+  ],
+};
+
+export interface UserPersonalStats {
+  environmentalScore: number;
+  myReportsCount: number;
+  myMissionsCount: number;
+  myWasteRecoveredKg: number;
+  mySitesRecoveredCount: number;
+}
+
+export interface LifecycleBreakdown {
+  totalActiveTrashTagsCount: number;
+  awaitingVerificationCount: number;
+  verifiedCount: number;
+  activeMissionsCount: number;
+  awaitingRecoveryVerificationCount: number;
+  transformationPlannedCount: number;
+  transformedCount: number;
+  inMonitoringCount: number;
+  reopenedCount: number;
+  sustainedCount: number;
+}
+
+export interface DemoDataStats {
+  demoReportsCount: number;
+  demoEstimatedWasteKg: number;
+  demoVerifiedWasteKg: number;
+  demoSitesRecoveredCount: number;
+}
+
+export interface ImpactOverview {
+  userReportedCount: number;
+  estimatedWasteKg: number;
+  verifiedWasteKg: number;
+  sitesRecoveredCount: number;
+  demoData: DemoDataStats;
+}
+
+export interface MonitoringPipelineSummary {
+  totalCheckpoints: number;
+  dueCheckpoints: number;
+  completedCheckpoints: number;
+  overdueCheckpoints: number;
+  sustainedSitesCount: number;
+  reopenedSitesCount: number;
+}
+
+export interface DashboardResponse {
+  userStats: UserPersonalStats;
+  lifecycleBreakdown: LifecycleBreakdown;
+  impactOverview: ImpactOverview;
+  upcomingMissions: Mission[];
+  monitoringPipeline: MonitoringPipelineSummary;
+  recentTimeline: TimelineEvent[];
+}
+
+export const MOCK_DASHBOARD: DashboardResponse = {
+  userStats: {
+    environmentalScore: 820,
+    myReportsCount: 8,
+    myMissionsCount: 5,
+    myWasteRecoveredKg: 240,
+    mySitesRecoveredCount: 3,
+  },
+  lifecycleBreakdown: {
+    totalActiveTrashTagsCount: 12,
+    awaitingVerificationCount: 4,
+    verifiedCount: 2,
+    activeMissionsCount: 3,
+    awaitingRecoveryVerificationCount: 2,
+    transformationPlannedCount: 1,
+    transformedCount: 1,
+    inMonitoringCount: 2,
+    reopenedCount: 1,
+    sustainedCount: 3,
+  },
+  impactOverview: {
+    userReportedCount: 8,
+    estimatedWasteKg: 420.0,
+    verifiedWasteKg: 240.0,
+    sitesRecoveredCount: 3,
+    demoData: {
+      demoReportsCount: 4,
+      demoEstimatedWasteKg: 850.0,
+      demoVerifiedWasteKg: 430.0,
+      demoSitesRecoveredCount: 2,
+    },
+  },
+  upcomingMissions: MOCK_MISSIONS,
+  monitoringPipeline: {
+    totalCheckpoints: 9,
+    dueCheckpoints: 2,
+    completedCheckpoints: 5,
+    overdueCheckpoints: 1,
+    sustainedSitesCount: 3,
+    reopenedSitesCount: 1,
+  },
+  recentTimeline: MOCK_GLOBAL_TIMELINE,
+};
+
+export async function fetchDashboardData(token?: string): Promise<DashboardResponse> {
+  try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/dashboard`, { headers, cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || json;
+  } catch (err) {
+    console.warn('API unavailable for fetchDashboardData, using dynamic mock data fallback:', err);
+    return MOCK_DASHBOARD;
+  }
+}
+

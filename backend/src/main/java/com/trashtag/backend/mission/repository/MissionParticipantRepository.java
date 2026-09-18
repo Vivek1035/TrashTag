@@ -15,5 +15,6 @@ public interface MissionParticipantRepository extends JpaRepository<MissionParti
     Optional<MissionParticipant> findByMissionIdAndUserId(UUID missionId, UUID userId);
     boolean existsByMissionIdAndUserId(UUID missionId, UUID userId);
     long countByMissionId(UUID missionId);
+    long countByUserId(UUID userId);
 }
 

@@ -15,6 +15,8 @@ public interface ScoreEventRepository extends JpaRepository<ScoreEvent, UUID> {
     @Query("SELECT SUM(s.points) FROM ScoreEvent s WHERE s.userId = :userId")
     Integer sumPointsByUserId(UUID userId);
 
+    boolean existsByUserIdAndTrashTagIdAndEventType(UUID userId, UUID trashTagId, String eventType);
+
     @Query("""
         SELECT s.userId, SUM(s.points) as total
         FROM ScoreEvent s

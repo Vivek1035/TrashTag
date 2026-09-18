@@ -2,6 +2,8 @@ package com.trashtag.backend.transformation.service;
 
 import com.trashtag.backend.common.enums.RecoveryStatus;
 import com.trashtag.backend.common.exception.ResourceNotFoundException;
+import com.trashtag.backend.leaderboard.entity.ScoreEvent;
+import com.trashtag.backend.leaderboard.repository.ScoreEventRepository;
 import com.trashtag.backend.monitoring.entity.MonitoringCheckpoint;
 import com.trashtag.backend.monitoring.repository.MonitoringCheckpointRepository;
 import com.trashtag.backend.timeline.entity.TimelineEvent;
@@ -31,6 +33,7 @@ public class TransformationService {
     private final TransformationRepository transformationRepository;
     private final MonitoringCheckpointRepository monitoringCheckpointRepository;
     private final TimelineEventRepository timelineEventRepository;
+    private final ScoreEventRepository scoreEventRepository;
     private final TrashTagStateMachine stateMachine;
 
     /**
@@ -125,6 +128,18 @@ public class TransformationService {
                 .imageUrl(request.getAfterImageUrl())
                 .build();
         timelineEventRepository.save(transformedEvent);
+
+        // Score Event — award 50 points for completing site transformation (with duplicate protection)
+        if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(userId, trashTagId, "TRANSFORMATION_COMPLETED")) {
+            ScoreEvent scoreEvent = ScoreEvent.builder()
+                    .userId(userId)
+                    .trashTagId(trashTagId)
+                    .eventType("TRANSFORMATION_COMPLETED")
+                    .points(50)
+                    .description("Earned 50 pts for executing site transformation on " + tag.getTagCode())
+                    .build();
+            scoreEventRepository.save(scoreEvent);
+        }
 
         // 2. Automatically create 3 monitoring checkpoints (30, 60, 90 days)
         List<MonitoringCheckpoint> checkpoints = new ArrayList<>();

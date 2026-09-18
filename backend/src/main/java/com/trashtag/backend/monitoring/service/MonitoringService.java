@@ -233,6 +233,18 @@ public class MonitoringService {
                     .build();
             timelineEventRepository.save(event);
 
+            // Score Event (+20 pts for completing surveillance inspection, with duplicate protection)
+            if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(userId, tag.getId(), "MONITORING_COMPLETED")) {
+                ScoreEvent scoreEvent = ScoreEvent.builder()
+                        .userId(userId)
+                        .trashTagId(tag.getId())
+                        .eventType("MONITORING_COMPLETED")
+                        .points(20)
+                        .description("Earned 20 pts for conducting " + cp.getCheckpointDays() + "-day site surveillance inspection on " + tag.getTagCode())
+                        .build();
+                scoreEventRepository.save(scoreEvent);
+            }
+
             // If 90-day checkpoint passes clean, transition to SUSTAINED
             if (cp.getCheckpointDays() == 90 || tag.getStatus() == RecoveryStatus.MONITORING) {
                 List<MonitoringCheckpoint> allCheckpoints = monitoringCheckpointRepository.findByTrashTagIdOrderByCheckpointDaysAsc(tag.getId());

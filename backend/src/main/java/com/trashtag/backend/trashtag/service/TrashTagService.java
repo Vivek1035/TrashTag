@@ -79,15 +79,17 @@ public class TrashTagService {
                 .build();
         timelineEventRepository.save(timelineEvent);
 
-        // Score Event (25 pts for verifier)
-        ScoreEvent scoreEvent = ScoreEvent.builder()
-                .userId(verifier.getId())
-                .trashTagId(tag.getId())
-                .eventType("HOTSPOT_VERIFIED")
-                .points(25)
-                .description("Earned 25 pts for verifying hotspot " + tag.getTagCode())
-                .build();
-        scoreEventRepository.save(scoreEvent);
+        // Score Event (20 pts for verified report, with duplicate protection)
+        if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(verifier.getId(), tag.getId(), "REPORT_VERIFIED")) {
+            ScoreEvent scoreEvent = ScoreEvent.builder()
+                    .userId(verifier.getId())
+                    .trashTagId(tag.getId())
+                    .eventType("REPORT_VERIFIED")
+                    .points(20)
+                    .description("Earned 20 pts for verifying hotspot " + tag.getTagCode())
+                    .build();
+            scoreEventRepository.save(scoreEvent);
+        }
 
         String reporterName = userRepository.findById(tag.getReporterId())
                 .map(u -> u.getDisplayName() != null ? u.getDisplayName() : u.getUsername())
@@ -148,15 +150,17 @@ public class TrashTagService {
                     .build();
             timelineEventRepository.save(timelineEvent);
 
-            // Score Event (50 pts for verifier conducting recovery audit)
-            ScoreEvent scoreEvent = ScoreEvent.builder()
-                    .userId(verifier.getId())
-                    .trashTagId(tag.getId())
-                    .eventType("RECOVERY_VERIFIED")
-                    .points(50)
-                    .description("Earned 50 pts for conducting verified recovery audit on " + tag.getTagCode())
-                    .build();
-            scoreEventRepository.save(scoreEvent);
+            // Score Event (50 pts for verifier conducting recovery audit, with duplicate protection)
+            if (!scoreEventRepository.existsByUserIdAndTrashTagIdAndEventType(verifier.getId(), tag.getId(), "RECOVERY_VERIFIED")) {
+                ScoreEvent scoreEvent = ScoreEvent.builder()
+                        .userId(verifier.getId())
+                        .trashTagId(tag.getId())
+                        .eventType("RECOVERY_VERIFIED")
+                        .points(50)
+                        .description("Earned 50 pts for conducting verified recovery audit on " + tag.getTagCode())
+                        .build();
+                scoreEventRepository.save(scoreEvent);
+            }
 
             // MongoDB Evidence Metadata Audit Record
             try {

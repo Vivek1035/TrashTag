@@ -76,6 +76,10 @@ public class TrashTag {
     @Column(length = 500)
     private String primaryImageUrl;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDemo = false;
+
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Instant reportedAt;
