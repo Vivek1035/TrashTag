@@ -85,6 +85,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/evidence/**").authenticated()
                 .requestMatchers("/api/timeline/**").authenticated()
                 .requestMatchers("/api/monitoring/**").authenticated()
+                .requestMatchers("/api/ai/**").authenticated()
+                .requestMatchers("/api/transformation/**").authenticated()
+
+
 
                 // ── VERIFIER or ADMIN ─────────────────────────────────
                 .requestMatchers(HttpMethod.POST, "/api/trash-tags/{id}/verify").hasAnyRole("VERIFIER", "ADMIN")

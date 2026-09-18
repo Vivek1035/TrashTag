@@ -7,9 +7,14 @@ import { TrashTag } from '@/types/trashtag';
 import { fetchTrashTagById, fetchTrashTagTimeline, TimelineEvent } from '@/services/api';
 import { RecoveryLifecycleStepper } from '@/components/recovery/RecoveryLifecycleStepper';
 import { NextActionCallout } from '@/components/recovery/NextActionCallout';
+import { useAuth } from '@/context/AuthContext';
 import { BeforeAfterViewer } from '@/components/recovery/BeforeAfterViewer';
 import { TimelineStream } from '@/components/recovery/TimelineStream';
+import { AIClassificationCard } from '@/components/ai/AIClassificationCard';
+import { AIPreventionCard } from '@/components/ai/AIPreventionCard';
 import { MapViewWrapper } from '@/components/map/MapViewWrapper';
+
+
 import {
   MapPin,
   Tag,
@@ -30,8 +35,10 @@ import {
 export default function RecoveryDetailPage() {
   const params = useParams();
   const id = (params?.id as string) || 'tt-1001-uuid';
+  const { token } = useAuth();
 
   const [tag, setTag] = useState<TrashTag | null>(null);
+
   const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
@@ -247,7 +254,12 @@ export default function RecoveryDetailPage() {
                 <MapViewWrapper tags={[tag]} selectedTag={tag} onSelectTag={() => {}} />
               </div>
             </div>
+
+            {/* AI Analysis & Prevention Hub */}
+            <AIClassificationCard tag={tag} token={token} onTagUpdated={setTag} />
+            <AIPreventionCard tag={tag} token={token} />
           </div>
+
 
           {/* Right Column (1 Col): Mission Info & Timeline */}
           <div className="space-y-6">

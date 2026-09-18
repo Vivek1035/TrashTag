@@ -74,6 +74,90 @@ export interface VerifyRecoveryInput {
   evidenceWasteRecordVerified?: boolean;
 }
 
+export interface ImageClassificationResponse {
+  trashTagId: string;
+  wasteCategories: Record<string, number>;
+  severitySuggestion: Severity;
+  confidence: number;
+  detectedObjects: string[];
+  explanation: string;
+  provider: string;
+  disclaimer: string;
+  createdAt: string;
+}
+
+export interface PreventionStrategy {
+  name: string;
+  reason: string;
+  costCategory: string;
+  maintenanceLevel: string;
+  expectedImpact: string;
+  implementationNotes: string;
+}
+
+export interface PreventionResponse {
+  trashTagId: string;
+  strategies: PreventionStrategy[];
+  provider: string;
+  disclaimer: string;
+  createdAt: string;
+}
+
+export interface ClassificationOverrideInput {
+  wasteType: WasteType;
+  severity: Severity;
+  notes?: string;
+}
+
+export interface MonitoringCheckpointDTO {
+  id: string;
+  trashTagId: string;
+  checkpointDays: number;
+  scheduledDate: string;
+  status: string;
+  notes?: string;
+  verifiedBy?: string;
+  verifiedAt?: string;
+  createdAt: string;
+}
+
+export interface TransformationResponse {
+  id: string;
+  trashTagId: string;
+  tagCode: string;
+  title: string;
+  status: RecoveryStatus;
+  transformationType?: string;
+  description?: string;
+  preventionStrategy?: string;
+  beforeImageUrl?: string;
+  afterImageUrl?: string;
+  estimatedWeightKg?: number;
+  recoveredWeightKg?: number;
+  submittedBy?: string;
+  transformedAt?: string;
+  checkpoints: MonitoringCheckpointDTO[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SelectStrategyInput {
+  strategyName: string;
+  strategyReason?: string;
+  costCategory?: string;
+  maintenanceLevel?: string;
+  expectedImpact?: string;
+  implementationNotes?: string;
+}
+
+export interface CompleteTransformationInput {
+  transformationType: string;
+  description: string;
+  afterImageUrl: string;
+}
+
+
+
 
 export interface Participant {
   id: string;
@@ -332,6 +416,119 @@ export async function verifyRecoveryApi(
   const data = await res.json();
   return data.data || data;
 }
+
+export async function classifyTrashTagApi(trashTagId: string, token: string): Promise<ImageClassificationResponse> {
+  const res = await fetch(`${API_BASE}/ai/trash-tags/${trashTagId}/classify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `AI image classification failed (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function getPreventionRecommendationsApi(trashTagId: string, token: string): Promise<PreventionResponse> {
+  const res = await fetch(`${API_BASE}/ai/trash-tags/${trashTagId}/prevention`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to fetch AI prevention recommendations (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function overrideClassificationApi(
+  trashTagId: string,
+  input: ClassificationOverrideInput,
+  token: string
+): Promise<TrashTag> {
+  const res = await fetch(`${API_BASE}/ai/trash-tags/${trashTagId}/override`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to override classification (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function planTransformationApi(
+  trashTagId: string,
+  input: SelectStrategyInput,
+  token: string
+): Promise<TransformationResponse> {
+  const res = await fetch(`${API_BASE}/transformation/${trashTagId}/plan`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to select strategy (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function completeTransformationApi(
+  trashTagId: string,
+  input: CompleteTransformationInput,
+  token: string
+): Promise<TransformationResponse> {
+  const res = await fetch(`${API_BASE}/transformation/${trashTagId}/complete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to complete transformation (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+export async function fetchTransformationApi(
+  trashTagId: string,
+  token?: string
+): Promise<TransformationResponse> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}/transformation/${trashTagId}`, { headers, cache: 'no-store' });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to fetch transformation (${res.status})`);
+  }
+  const json = await res.json();
+  return json.data || json;
+}
+
+
 
 
 export async function fetchMissionParticipants(missionId: string, token?: string): Promise<Participant[]> {
