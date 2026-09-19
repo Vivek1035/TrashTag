@@ -16,10 +16,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/explore/page.js"
     ],
-    "/recovery/[id]/page": [
+    "/missions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/recovery/[id]/page.js"
+      "static/chunks/app/missions/page.js"
     ]
   }
 }

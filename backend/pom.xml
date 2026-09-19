@@ -91,10 +91,17 @@
 		</dependency>
 
 		<!-- H2 for tests -->
+		<!-- Mockito for dev/test mongo mocks -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+
+		<!-- H2 for dev and tests -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>test</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Test -->

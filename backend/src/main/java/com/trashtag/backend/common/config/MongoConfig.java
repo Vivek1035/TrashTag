@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@Profile("!test")
+@Profile("!test & !dev")
 @EnableMongoAuditing
 @EnableMongoRepositories(basePackages = {
         "com.trashtag.backend.ai.repository",
