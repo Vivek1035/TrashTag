@@ -376,27 +376,6 @@ npm run dev
 
 ---
 
-## Demo
-
-### 3-Minute Hackathon Demo Script
-
-1. **Minute 1: Tagging & AI Analysis** (`/report`)
-   - Log in using Demo Role Switcher as **Anika Rao (Scout User)**.
-   - Tag a new waste hotspot with primary photo and GPS location.
-   - Click **Trigger AI Analysis** to view AI classification, waste categories, severity score (8/10), and prevention recommendations.
-
-2. **Minute 2: Verification & Mission Cleanup** (`/recovery/TT-D01`)
-   - Switch role to **Priya Krishnan (Verifier)** and confirm field verification.
-   - Switch role to **Green Bengaluru (Organization)** and create a Cleanup Mission.
-   - Complete the mission with volunteer logs and cleanup evidence photo.
-
-3. **Minute 3: 30/60/90 Monitoring, Auto-Play & Transformation** (`/recovery/TT-D01` & `/transformation/TS-D01`)
-   - Open the embedded **Hackathon Demo Control Panel** on `/recovery/TT-D01`.
-   - Click **Auto-Play All Steps** to watch the state machine transition through Day 30, Day 60, and Day 90 surveillance audits into official **RECOVERED** status.
-   - View the final **Site Transformation** page (`/transformation/TS-D01`) converting the site into a green park, and check updated points on `/leaderboard`.
-
----
-
 ## Future Improvements
 
 - 📊 **Organization & Municipal Dashboards**: Dedicated portal for city waste management authorities to view ward-wise recovery metrics and resource allocation.
