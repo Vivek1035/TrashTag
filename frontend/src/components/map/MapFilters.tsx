@@ -30,21 +30,21 @@ export const MapFilters: React.FC<MapFiltersProps> = ({
   totalCount,
 }) => {
   return (
-    <div className="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl p-4 shadow-xl space-y-4">
+    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-xl space-y-4">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 dark:text-slate-400" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search by tag code (TT-1001), title, or address..."
-          className="w-full bg-slate-800/90 text-slate-100 placeholder-slate-400 pl-10 pr-4 py-2.5 rounded-lg border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm transition-all"
+          className="w-full bg-slate-100 dark:bg-slate-800/90 text-slate-900 dark:text-slate-100 placeholder-slate-400 pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => onSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-200 bg-slate-700 px-1.5 py-0.5 rounded"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 bg-slate-700 px-1.5 py-0.5 rounded"
           >
             Clear
           </button>
@@ -54,7 +54,7 @@ export const MapFilters: React.FC<MapFiltersProps> = ({
       {/* Filter Chips */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
             <Filter className="w-3.5 h-3.5 text-emerald-400" /> Filter Category
           </span>
           <span className="text-xs text-emerald-400 font-mono font-medium">
@@ -72,7 +72,7 @@ export const MapFilters: React.FC<MapFiltersProps> = ({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 scale-105'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-300 dark:border-slate-700/60'
                 }`}
               >
                 {item.icon}

@@ -14,13 +14,13 @@ export const MapLegend: React.FC = () => {
   ];
 
   return (
-    <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-xl p-3.5 shadow-lg text-xs space-y-2">
-      <div className="font-semibold text-slate-300 uppercase tracking-wider text-[10px] border-b border-slate-800 pb-1.5 mb-2">
+    <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-lg text-xs space-y-2">
+      <div className="font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-800 pb-1.5 mb-2">
         Map Legend & Status Badges
       </div>
       <div className="grid grid-cols-2 gap-2">
         {legendItems.map((item, idx) => (
-          <div key={idx} className="flex items-center gap-2 text-slate-300">
+          <div key={idx} className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
             <span className={`w-3 h-3 rounded-full ${item.color} border shadow-sm flex items-center justify-center`}></span>
             <span className="truncate">{item.label}</span>
           </div>

@@ -47,12 +47,26 @@ const createCustomIcon = (tag: TrashTag, isSelected: boolean) => {
   });
 };
 
-// Component to dynamically re-center map when a tag is selected
+// Component to dynamically re-center map when a tag is selected & handle Leaflet viewport invalidation
 const MapController: React.FC<{ selectedTag: TrashTag | null }> = ({ selectedTag }) => {
   const map = useMap();
 
   useEffect(() => {
+    const invalidate = () => map.invalidateSize();
+    invalidate();
+    const timer1 = setTimeout(invalidate, 100);
+    const timer2 = setTimeout(invalidate, 400);
+    window.addEventListener('resize', invalidate);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      window.removeEventListener('resize', invalidate);
+    };
+  }, [map]);
+
+  useEffect(() => {
     if (selectedTag) {
+      map.invalidateSize();
       map.flyTo([selectedTag.latitude, selectedTag.longitude], 14, {
         duration: 1.2,
       });
@@ -63,24 +77,22 @@ const MapController: React.FC<{ selectedTag: TrashTag | null }> = ({ selectedTag
 };
 
 export const MapView: React.FC<MapViewProps> = ({ tags, selectedTag, onSelectTag }) => {
-  // Default map center: San Francisco or average of tags
   const defaultCenter: [number, number] = tags.length > 0
     ? [tags[0].latitude, tags[0].longitude]
-    : [37.7749, -122.4194];
+    : [12.9716, 77.5946];
 
   return (
-    <div className="w-full h-full relative z-0">
+    <div className="w-full h-full min-h-[450px] relative z-0 flex-1 flex flex-col">
       <MapContainer
         center={defaultCenter}
         zoom={12}
         scrollWheelZoom={true}
-        className="w-full h-full rounded-2xl overflow-hidden shadow-inner"
-        style={{ background: '#0f172a' }}
+        className="w-full h-full flex-1 rounded-2xl overflow-hidden shadow-inner min-h-[450px]"
       >
-        {/* Dark theme styled tile layer from OpenStreetMap / CartoDB */}
+        {/* Standard OpenStreetMap tile layer (100% free, no API key required) */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
 
@@ -111,4 +123,3 @@ export const MapView: React.FC<MapViewProps> = ({ tags, selectedTag, onSelectTag
 };
 
 export default MapView;
-

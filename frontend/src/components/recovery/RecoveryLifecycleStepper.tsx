@@ -50,17 +50,17 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
   const isSustained = currentStatus === 'SUSTAINED';
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800/90 rounded-2xl p-6 shadow-2xl backdrop-blur-md space-y-6">
+    <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 shadow-2xl backdrop-blur-md space-y-6">
       {/* Header & Status Indicator */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
-          <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <span>Environmental Recovery Lifecycle</span>
             <span className="text-xs bg-emerald-500/20 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/30">
               Stage {activeStepNumber} of 8
             </span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Dynamic end-to-end recovery tracking derived from live backend state
           </p>
         </div>
@@ -89,7 +89,7 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
       {/* Horizontal Stepper (Desktop) */}
       <div className="hidden lg:block relative py-4">
         {/* Background Connecting Line */}
-        <div className="absolute top-1/2 left-4 right-4 h-1 bg-slate-800 -translate-y-1/2 z-0 rounded-full"></div>
+        <div className="absolute top-1/2 left-4 right-4 h-1 bg-slate-100 dark:bg-slate-800 -translate-y-1/2 z-0 rounded-full"></div>
         {/* Progress Fill Line */}
         <div
           className="absolute top-1/2 left-4 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 -translate-y-1/2 z-0 rounded-full transition-all duration-700"
@@ -110,8 +110,8 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
                     isPassed
                       ? 'bg-emerald-500 text-slate-950 ring-4 ring-emerald-500/20 shadow-md shadow-emerald-500/30'
                       : isCurrent
-                      ? 'bg-slate-900 text-emerald-400 border-2 border-emerald-400 ring-8 ring-emerald-500/20 scale-110 shadow-xl shadow-emerald-500/40'
-                      : 'bg-slate-800/90 text-slate-500 border border-slate-700'
+                      ? 'bg-white dark:bg-slate-900 text-emerald-400 border-2 border-emerald-400 ring-8 ring-emerald-500/20 scale-110 shadow-xl shadow-emerald-500/40'
+                      : 'bg-slate-100 dark:bg-slate-800/90 text-slate-500 border border-slate-300 dark:border-slate-700'
                   }`}
                 >
                   {isPassed ? <CheckCircle2 className="w-5 h-5 stroke-[2.5]" /> : step.stepNumber}
@@ -123,7 +123,7 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
                     isCurrent
                       ? 'text-emerald-400 font-bold scale-105'
                       : isPassed
-                      ? 'text-slate-200'
+                      ? 'text-slate-800 dark:text-slate-200'
                       : 'text-slate-500'
                   }`}
                 >
@@ -155,8 +155,8 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
                 isCurrent
                   ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300 shadow-lg shadow-emerald-500/10'
                   : isPassed
-                  ? 'bg-slate-800/40 border-slate-700/60 text-slate-200'
-                  : 'bg-slate-900/40 border-slate-800/60 text-slate-500 opacity-60'
+                  ? 'bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700/60 text-slate-800 dark:text-slate-200'
+                  : 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/60 text-slate-500 opacity-60'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -166,14 +166,14 @@ export const RecoveryLifecycleStepper: React.FC<RecoveryLifecycleStepperProps> =
                       ? 'bg-emerald-500 text-slate-950'
                       : isCurrent
                       ? 'bg-emerald-400 text-slate-950 ring-2 ring-emerald-400/40 animate-pulse'
-                      : 'bg-slate-800 text-slate-500 border border-slate-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700'
                   }`}
                 >
                   {isPassed ? '✓' : step.stepNumber}
                 </div>
                 <div>
                   <h4 className="text-xs font-bold">{step.name}</h4>
-                  <p className="text-[10px] text-slate-400">{step.description}</p>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400">{step.description}</p>
                 </div>
               </div>
 

@@ -79,6 +79,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/dashboard").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/dashboard/**").permitAll()
 
+                // Public access — AI Classification & Prevention Analysis
+                .requestMatchers("/api/ai/**").permitAll()
+
                 // ── Authenticated (any role) ───────────────────────────
                 .requestMatchers(HttpMethod.GET,  "/api/auth/me").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/trash-tags").authenticated()
@@ -89,10 +92,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/evidence/**").authenticated()
                 .requestMatchers("/api/timeline/**").authenticated()
                 .requestMatchers("/api/monitoring/**").authenticated()
-                .requestMatchers("/api/ai/**").authenticated()
                 .requestMatchers("/api/transformation/**").authenticated()
-
-
 
                 // ── VERIFIER or ADMIN ─────────────────────────────────
                 .requestMatchers(HttpMethod.POST, "/api/trash-tags/{id}/verify").hasAnyRole("VERIFIER", "ADMIN")

@@ -179,10 +179,10 @@ export default function TransformationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 flex items-center justify-center p-6">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-medium text-slate-400">Loading transformation workspace...</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Loading transformation workspace...</p>
         </div>
       </div>
     );
@@ -190,13 +190,13 @@ export default function TransformationPage() {
 
   if (!tag) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 p-6 flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 p-6 flex flex-col items-center justify-center gap-4">
         <AlertTriangle className="w-12 h-12 text-rose-500" />
         <h2 className="text-xl font-bold">TrashTag Site Not Found</h2>
-        <p className="text-slate-400 text-sm">Could not retrieve site data for ID: {siteId}</p>
+        <p className="text-slate-600 dark:text-slate-400 text-sm">Could not retrieve site data for ID: {siteId}</p>
         <Link
           href="/explore"
-          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors"
+          className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors"
         >
           Return to Explore Map
         </Link>
@@ -212,14 +212,14 @@ export default function TransformationPage() {
     tag.status === 'SUSTAINED';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-16">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 pb-16">
       {/* Top Sticky Header */}
-      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 shadow-md">
+      <div className="bg-slate-100/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 px-4 py-3.5 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               href={`/recovery/${tag.id}`}
-              className="p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
@@ -228,11 +228,11 @@ export default function TransformationPage() {
                 <span className="text-xs font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-mono">
                   {tag.tagCode}
                 </span>
-                <span className="text-[11px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                <span className="text-[11px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
                   Status: {tag.status}
                 </span>
               </div>
-              <h1 className="text-lg font-bold text-slate-100 mt-0.5">{tag.title}</h1>
+              <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">{tag.title}</h1>
             </div>
           </div>
 
@@ -242,7 +242,7 @@ export default function TransformationPage() {
             </span>
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="max-w-6xl mx-auto px-4 mt-6 space-y-6">
         {/* Banner Alert if NOT Eligible */}
@@ -283,9 +283,9 @@ export default function TransformationPage() {
         )}
 
         {/* Site Context Summary Hero Card */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-lg">
+        <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 h-40">
+            <div className="relative rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 h-40">
               {tag.primaryImageUrl ? (
                 <img
                   src={tag.primaryImageUrl}
@@ -303,23 +303,23 @@ export default function TransformationPage() {
               </div>
             </div>
 
-            <div className="md:col-span-2 space-y-2.5 text-xs text-slate-300">
+            <div className="md:col-span-2 space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-emerald-400" /> Location Address
                 </span>
-                <span className="font-medium text-slate-200">{tag.address || 'N/A'}</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">{tag.address || 'N/A'}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                   <Weight className="w-4 h-4 text-emerald-400" /> Recovered Waste Swept
                 </span>
                 <span className="font-bold text-emerald-400 text-sm">{tag.recoveredWeightKg || 0} kg</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-purple-400" /> Selected Prevention Plan
                 </span>
                 <span className="font-semibold text-purple-300">
@@ -328,8 +328,8 @@ export default function TransformationPage() {
               </div>
 
               {transformation?.description && (
-                <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 text-[11px] text-slate-300">
-                  <span className="font-semibold text-slate-400 block mb-0.5">Transformation Goal:</span>
+                <div className="bg-slate-50 dark:bg-slate-950/70 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300">
+                  <span className="font-semibold text-slate-600 dark:text-slate-400 block mb-0.5">Transformation Goal:</span>
                   {transformation.description}
                 </div>
               )}
@@ -339,14 +339,14 @@ export default function TransformationPage() {
 
         {/* PHASE 1: SELECT AI PREVENTION STRATEGY (When status is RECOVERY_VERIFIED) */}
         {tag.status === 'RECOVERY_VERIFIED' && (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Bot className="w-5 h-5 text-purple-400" />
                   Phase 1: Select AI Prevention Strategy
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                   Choose a context-appropriate prevention strategy to advance status to <strong>TRANSFORMATION_PLANNED</strong>.
                 </p>
               </div>
@@ -384,19 +384,19 @@ export default function TransformationPage() {
               ]).map((strat, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between space-y-3 hover:border-purple-500/40 transition-colors"
+                  className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3 hover:border-purple-500/40 transition-colors"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-300 font-bold text-xs flex items-center justify-center border border-purple-500/30">
                         {idx + 1}
                       </span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 text-emerald-400 border border-slate-800">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white dark:bg-slate-900 text-emerald-400 border border-slate-200 dark:border-slate-800">
                         Impact: {strat.expectedImpact}
                       </span>
                     </div>
-                    <h4 className="text-sm font-bold text-slate-100">{strat.name}</h4>
-                    <p className="text-xs text-slate-400 leading-relaxed">{strat.reason}</p>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">{strat.name}</h4>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{strat.reason}</p>
                   </div>
 
                   <button
@@ -419,14 +419,14 @@ export default function TransformationPage() {
 
         {/* PHASE 2: COMPLETE TRANSFORMATION EVIDENCE (When status is TRANSFORMATION_PLANNED) */}
         {tag.status === 'TRANSFORMATION_PLANNED' && (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Camera className="w-5 h-5 text-emerald-400" />
                   Phase 2: Transformation Evidence Upload
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                   Upload transformation evidence to advance status to <strong>TRANSFORMED</strong> and trigger automated <strong>30/60/90-day monitoring checkpoints</strong>.
                 </p>
               </div>
@@ -438,11 +438,11 @@ export default function TransformationPage() {
             <form onSubmit={handleCompleteTransformation} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300 block">Transformation Type</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Transformation Type</label>
                   <select
                     value={transformationType}
                     onChange={(e) => setTransformationType(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                   >
                     <option value="Community Garden">Community Garden</option>
                     <option value="Waste Segregation Point">Waste Segregation Point</option>
@@ -455,31 +455,31 @@ export default function TransformationPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300 block">After-Transformation Photo URL</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">After-Transformation Photo URL</label>
                   <input
                     type="url"
                     value={afterImageUrl}
                     onChange={(e) => setAfterImageUrl(e.target.value)}
                     placeholder="https://images.unsplash.com/transformed-site.jpg"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 block">Transformation Description</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Transformation Description</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the physical modifications, garden beds installed, mural work, community participants..."
                   rows={3}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                   required
                 />
               </div>
 
-              <div className="flex justify-end border-t border-slate-800 pt-4">
+              <div className="flex justify-end border-t border-slate-200 dark:border-slate-800 pt-4">
                 <button
                   type="submit"
                   disabled={submitting}
@@ -507,11 +507,11 @@ export default function TransformationPage() {
         />
 
         {/* AUTOMATED MONITORING CHECKPOINTS PANEL */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-cyan-400" />
-              <h3 className="text-base font-bold text-slate-100">Automated Site Monitoring Checkpoints</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Automated Site Monitoring Checkpoints</h3>
             </div>
             <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               30 / 60 / 90 Days Protocol
@@ -529,7 +529,7 @@ export default function TransformationPage() {
             ).map((cp: any, idx: number) => (
               <div
                 key={idx}
-                className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-between"
+                className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 flex flex-col justify-between"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
@@ -540,16 +540,16 @@ export default function TransformationPage() {
                       className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${
                         cp.status === 'VERIFIED'
                           ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                          : 'bg-slate-800 text-slate-400 border-slate-700'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700'
                       }`}
                     >
                       {cp.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 font-mono mt-1">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-mono mt-1">
                     📅 {cp.scheduledDate ? new Date(cp.scheduledDate).toLocaleDateString() : `${cp.checkpointDays} days post-completion`}
                   </p>
-                  <p className="text-[11px] text-slate-400">{cp.notes}</p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400">{cp.notes}</p>
                 </div>
               </div>
             ))}

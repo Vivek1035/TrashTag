@@ -75,31 +75,33 @@ export default function MissionsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               Community Mobilization
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               Cleanup Missions
             </h1>
-            <p className="mt-2 text-slate-400 max-w-2xl text-sm sm:text-base">
+            <p className="mt-2 text-slate-600 dark:text-slate-400 max-w-2xl text-sm sm:text-base">
               Join active field cleanup operations in your area. Mobilize with volunteers, recover hazardous waste, and earn TrashTag XP.
             </p>
           </div>
 
-          {(user?.role === 'ORGANIZATION' || user?.role === 'ADMIN') && (
-            <Link
-              href="/explore"
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold text-white transition-all shadow-lg shadow-emerald-900/30 text-sm shrink-0"
-            >
-              + Organize New Mission
-            </Link>
-          )}
+          <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+            {(user?.role === 'ORGANIZATION' || user?.role === 'ADMIN') && (
+              <Link
+                href="/explore"
+                className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold text-white transition-all shadow-lg shadow-emerald-900/30 text-sm shrink-0"
+              >
+                + Organize New Mission
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Feedback Message */}
@@ -107,8 +109,8 @@ export default function MissionsPage() {
           <div
             className={`p-4 rounded-lg border text-sm font-medium transition-all ${
               message.type === 'success'
-                ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
-                : 'bg-red-950/80 border-red-500/40 text-red-300'
+                ? 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+                : 'bg-red-50 dark:bg-red-950/80 border-red-500/40 text-red-300'
             }`}
           >
             {message.text}
@@ -116,14 +118,14 @@ export default function MissionsPage() {
         )}
 
         {/* Search & Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between bg-slate-100/80 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
           <div className="relative flex-1 max-w-md">
             <input
               type="text"
               placeholder="Search by title, tag code (e.g. TT-1002), location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700/80 rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
@@ -136,7 +138,7 @@ export default function MissionsPage() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap ${
                   filterStatus === st
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-slate-800/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-800 hover:text-slate-800 dark:text-slate-200'
                 }`}
               >
                 {st}
@@ -149,16 +151,16 @@ export default function MissionsPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-64 bg-slate-900/40 rounded-xl animate-pulse border border-slate-800/60" />
+              <div key={i} className="h-64 bg-slate-100/60 dark:bg-slate-900/40 rounded-xl animate-pulse border border-slate-200 dark:border-slate-800/60" />
             ))}
           </div>
         ) : filteredMissions.length === 0 ? (
-          <div className="text-center py-16 bg-slate-900/30 rounded-xl border border-slate-800/60">
-            <p className="text-slate-400 text-lg font-medium">No cleanup missions found matching your filter.</p>
+          <div className="text-center py-16 bg-white dark:bg-slate-900/30 rounded-xl border border-slate-200 dark:border-slate-800/60">
+            <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">No cleanup missions found matching your filter.</p>
             <p className="text-slate-500 text-sm mt-1">Explore verified TrashTags on the Explore Map to launch new missions!</p>
             <Link
               href="/explore"
-              className="mt-4 inline-block px-4 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 text-sm font-semibold rounded-lg border border-slate-700"
+              className="mt-4 inline-block px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-emerald-400 text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700"
             >
               Go to Explore Map
             </Link>
@@ -174,7 +176,7 @@ export default function MissionsPage() {
               return (
                 <div
                   key={mission.id}
-                  className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-200 shadow-lg hover:shadow-emerald-950/20 group"
+                  className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-200 shadow-lg hover:shadow-emerald-950/20 group"
                 >
                   <div className="space-y-4">
                     {/* Status & Tag Code */}
@@ -182,7 +184,7 @@ export default function MissionsPage() {
                       {mission.trashTagCode ? (
                         <Link
                           href={`/recovery/${mission.trashTagId}`}
-                          className="font-mono text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-800/50"
+                          className="font-mono text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-800/50"
                         >
                           {mission.trashTagCode}
                         </Link>
@@ -196,7 +198,7 @@ export default function MissionsPage() {
                             ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 animate-pulse'
                             : mission.status === 'UPCOMING'
                             ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
-                            : 'bg-slate-800 text-slate-400 border-slate-700'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700'
                         }`}
                       >
                         {mission.status}
@@ -206,17 +208,17 @@ export default function MissionsPage() {
                     {/* Mission Title & Description */}
                     <div>
                       <Link href={`/missions/${mission.id}`}>
-                        <h3 className="text-lg font-bold text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-1">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-1">
                           {mission.title}
                         </h3>
                       </Link>
-                      <p className="text-sm text-slate-400 mt-1 line-clamp-2">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                         {mission.description || 'Join community volunteers for on-site waste collection and sorting.'}
                       </p>
                     </div>
 
                     {/* Details */}
-                    <div className="space-y-2 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                    <div className="space-y-2 text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/60 p-3 rounded-lg border border-slate-200 dark:border-slate-800/80">
                       <div className="flex items-center gap-2">
                         <span className="text-slate-500">📅</span>
                         <span>{new Date(mission.scheduledDate).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
@@ -228,9 +230,9 @@ export default function MissionsPage() {
                         </div>
                       )}
                       {mission.creatorName && (
-                        <div className="flex items-center gap-2 text-slate-400">
+                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                           <span className="text-slate-500">👥</span>
-                          <span>Organized by <strong className="text-slate-200">{mission.creatorName}</strong></span>
+                          <span>Organized by <strong className="text-slate-800 dark:text-slate-200">{mission.creatorName}</strong></span>
                         </div>
                       )}
                     </div>
@@ -238,12 +240,12 @@ export default function MissionsPage() {
                     {/* Progress Bar */}
                     <div className="space-y-1.5">
                       <div className="flex justify-between text-xs">
-                        <span className="text-slate-400 font-medium">Volunteers Signed Up</span>
-                        <span className="font-bold text-slate-200">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Volunteers Signed Up</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">
                           {mission.currentParticipantsCount || 0} / {mission.maxParticipants}
                         </span>
                       </div>
-                      <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-300 ${
                             progressPct >= 100 ? 'bg-emerald-400' : 'bg-emerald-500'
@@ -255,17 +257,17 @@ export default function MissionsPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                  <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-3">
                     <Link
                       href={`/missions/${mission.id}`}
-                      className="text-xs font-semibold text-slate-400 hover:text-slate-200 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors"
+                      className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-800 transition-colors"
                     >
                       View Details
                     </Link>
 
                     {mission.status === 'ACTIVE' ? (
                       <Link
-                        href={`/recovery/${mission.trashTagId}`}
+                        href={`/field/${mission.id}`}
                         className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-950/40 animate-pulse"
                       >
                         ⚡ Open Field Mode
@@ -274,7 +276,7 @@ export default function MissionsPage() {
                       <button
                         onClick={() => handleLeave(mission.id)}
                         disabled={actionLoadingId === mission.id}
-                        className="px-4 py-2 bg-slate-800 hover:bg-red-950/60 hover:text-red-400 text-slate-300 border border-slate-700 text-xs font-bold rounded-lg transition-all"
+                        className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-red-50/80 dark:bg-red-950/60 hover:text-red-400 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg transition-all"
                       >
                         {actionLoadingId === mission.id ? 'Leaving...' : 'Leave Mission'}
                       </button>
@@ -285,7 +287,7 @@ export default function MissionsPage() {
                           actionLoadingId === mission.id ||
                           (mission.currentParticipantsCount || 0) >= mission.maxParticipants
                         }
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-950/30"
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 dark:bg-slate-800 disabled:text-slate-500 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-emerald-950/30"
                       >
                         {actionLoadingId === mission.id
                           ? 'Joining...'
@@ -304,4 +306,3 @@ export default function MissionsPage() {
     </div>
   );
 }
-

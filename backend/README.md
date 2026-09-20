@@ -154,6 +154,14 @@ The API will be available at: `http://localhost:8080`
 | `GET` | `/api/test/all` | Public endpoint |
 | `GET` | `/api/test/user` | Authenticated endpoint |
 
+### Hackathon Demo Endpoints (`@Profile("!prod")`)
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/demo/create` | Seed a new isolated demo TrashTag (`REPORTED`) |
+| `POST` | `/api/demo/{tagId}/step/{stepNumber}` | Advance TrashTag through lifecycle step (1 to 15) |
+| `POST` | `/api/demo/{tagId}/auto-run` | Auto-execute all 15 steps sequentially |
+
 **Register example:**
 ```bash
 curl -X POST http://localhost:8080/api/auth/register \

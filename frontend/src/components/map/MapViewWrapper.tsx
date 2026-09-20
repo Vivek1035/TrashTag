@@ -14,7 +14,7 @@ interface MapViewProps {
 const DynamicMapView = dynamic(() => import('./MapView'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-slate-400 gap-3 border border-slate-800">
+    <div className="w-full h-full bg-white dark:bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 gap-3 border border-slate-200 dark:border-slate-800">
       <div className="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
       <span className="text-sm font-medium animate-pulse flex items-center gap-1.5">
         <MapPin className="w-4 h-4 text-emerald-400" /> Loading Explore Map...

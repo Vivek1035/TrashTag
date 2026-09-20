@@ -101,10 +101,10 @@ export default function MissionDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 flex items-center justify-center p-4">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 text-sm">Loading mission details...</p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">Loading mission details...</p>
         </div>
       </div>
     );
@@ -112,10 +112,10 @@ export default function MissionDetailPage() {
 
   if (!mission) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 p-8 text-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 p-8 text-center">
         <h2 className="text-2xl font-bold text-white">Mission Not Found</h2>
-        <p className="text-slate-400 mt-2">The requested cleanup mission could not be located.</p>
-        <Link href="/missions" className="mt-4 inline-block px-4 py-2 bg-slate-800 text-emerald-400 rounded-lg">
+        <p className="text-slate-600 dark:text-slate-400 mt-2">The requested cleanup mission could not be located.</p>
+        <Link href="/missions" className="mt-4 inline-block px-4 py-2 bg-slate-100 dark:bg-slate-800 text-emerald-400 rounded-lg">
           ← Back to Missions
         </Link>
       </div>
@@ -129,12 +129,12 @@ export default function MissionDetailPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Back Link */}
         <Link
           href="/missions"
-          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-emerald-400 transition-colors"
         >
           ← Back to Cleanup Missions
         </Link>
@@ -144,8 +144,8 @@ export default function MissionDetailPage() {
           <div
             className={`p-4 rounded-lg border text-sm font-medium transition-all ${
               message.type === 'success'
-                ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
-                : 'bg-red-950/80 border-red-500/40 text-red-300'
+                ? 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+                : 'bg-red-50 dark:bg-red-950/80 border-red-500/40 text-red-300'
             }`}
           >
             {message.text}
@@ -153,7 +153,7 @@ export default function MissionDetailPage() {
         )}
 
         {/* Main Card */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-8 shadow-2xl">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 space-y-8 shadow-2xl">
           {/* Header */}
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -161,7 +161,7 @@ export default function MissionDetailPage() {
                 {mission.trashTagCode && (
                   <Link
                     href={`/recovery/${mission.trashTagId}`}
-                    className="font-mono text-xs font-bold text-emerald-400 bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-800/60 hover:bg-emerald-900/40 transition-colors"
+                    className="font-mono text-xs font-bold text-emerald-400 bg-emerald-50 dark:bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-800/60 hover:bg-emerald-900/40 transition-colors"
                   >
                     TrashTag {mission.trashTagCode}
                   </Link>
@@ -172,7 +172,7 @@ export default function MissionDetailPage() {
                       ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 animate-pulse'
                       : mission.status === 'UPCOMING'
                       ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
-                      : 'bg-slate-800 text-slate-400 border-slate-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700'
                   }`}
                 >
                   {mission.status}
@@ -181,7 +181,7 @@ export default function MissionDetailPage() {
 
               {mission.status === 'ACTIVE' && (
                 <Link
-                  href={`/recovery/${mission.trashTagId}`}
+                  href={`/field/${mission.id}`}
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all shadow-lg shadow-emerald-950/50 animate-pulse"
                 >
                   ⚡ Open Field Mode
@@ -190,16 +190,16 @@ export default function MissionDetailPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{mission.title}</h1>
-            <p className="text-slate-300 text-base leading-relaxed">
+            <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed">
               {mission.description || 'No detailed mission description provided.'}
             </p>
           </div>
 
           {/* Key Logistics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/70 p-5 rounded-xl border border-slate-800/80">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-950/70 p-5 rounded-xl border border-slate-200 dark:border-slate-800/80">
             <div className="space-y-1">
               <span className="text-xs text-slate-500 uppercase font-semibold">Scheduled Date & Time</span>
-              <p className="text-sm font-semibold text-slate-200">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                 {new Date(mission.scheduledDate).toLocaleString(undefined, {
                   weekday: 'long',
                   year: 'numeric',
@@ -213,7 +213,7 @@ export default function MissionDetailPage() {
 
             <div className="space-y-1">
               <span className="text-xs text-slate-500 uppercase font-semibold">Meeting Point</span>
-              <p className="text-sm font-semibold text-slate-200">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                 {mission.meetingPoint || 'To be announced on location'}
               </p>
             </div>
@@ -226,8 +226,8 @@ export default function MissionDetailPage() {
             )}
 
             {mission.creatorName && (
-              <div className="space-y-1 sm:col-span-2 pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
-                <span>Organized by <strong className="text-slate-200">{mission.creatorName}</strong></span>
+              <div className="space-y-1 sm:col-span-2 pt-2 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+                <span>Organized by <strong className="text-slate-800 dark:text-slate-200">{mission.creatorName}</strong></span>
                 <span>Created {new Date(mission.createdAt).toLocaleDateString()}</span>
               </div>
             )}
@@ -236,13 +236,13 @@ export default function MissionDetailPage() {
           {/* Volunteer Progress & Roster */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-100">Volunteer Roster</h3>
-              <span className="text-xs font-semibold text-slate-400">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Volunteer Roster</h3>
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                 {mission.currentParticipantsCount || 0} / {mission.maxParticipants} Volunteers Signed Up
               </span>
             </div>
 
-            <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-500 transition-all duration-300"
                 style={{ width: `${progressPct}%` }}
@@ -256,13 +256,13 @@ export default function MissionDetailPage() {
                 {participants.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between bg-slate-950/60 px-3.5 py-2.5 rounded-lg border border-slate-800 text-xs"
+                    className="flex items-center justify-between bg-slate-50 dark:bg-slate-950/60 px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-emerald-950 border border-emerald-600/40 text-emerald-300 font-bold flex items-center justify-center text-xs">
+                      <div className="w-7 h-7 rounded-full bg-emerald-50 dark:bg-emerald-950 border border-emerald-600/40 text-emerald-300 font-bold flex items-center justify-center text-xs">
                         {p.userName.charAt(0).toUpperCase()}
                       </div>
-                      <span className="font-semibold text-slate-200">{p.userName}</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{p.userName}</span>
                     </div>
 
                     {p.checkedIn ? (
@@ -279,7 +279,7 @@ export default function MissionDetailPage() {
           </div>
 
           {/* Action Bar */}
-          <div className="pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+          <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
             {isOrgOrAdmin && mission.status === 'UPCOMING' && (
               <button
                 onClick={handleStartMission}
@@ -294,7 +294,7 @@ export default function MissionDetailPage() {
               <button
                 onClick={handleLeave}
                 disabled={actionLoading}
-                className="px-5 py-2.5 bg-slate-800 hover:bg-red-950/60 hover:text-red-400 text-slate-300 border border-slate-700 font-bold text-sm rounded-lg transition-all"
+                className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-red-50/80 dark:bg-red-950/60 hover:text-red-400 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-bold text-sm rounded-lg transition-all"
               >
                 {actionLoading ? 'Processing...' : 'Leave Mission'}
               </button>
@@ -304,7 +304,7 @@ export default function MissionDetailPage() {
                 disabled={
                   actionLoading || (mission.currentParticipantsCount || 0) >= mission.maxParticipants
                 }
-                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold text-sm rounded-lg transition-all shadow-lg shadow-emerald-950/40"
+                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 dark:bg-slate-800 disabled:text-slate-500 text-white font-bold text-sm rounded-lg transition-all shadow-lg shadow-emerald-950/40"
               >
                 {actionLoading
                   ? 'Processing...'
@@ -317,7 +317,7 @@ export default function MissionDetailPage() {
             {mission.trashTagId && (
               <Link
                 href={`/recovery/${mission.trashTagId}`}
-                className="text-xs font-semibold text-slate-400 hover:text-slate-200 underline"
+                className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 underline"
               >
                 View Associated TrashTag Page →
               </Link>

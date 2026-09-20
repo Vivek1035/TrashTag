@@ -3,9 +3,15 @@ package com.trashtag.backend.trashtag.dto;
 import com.trashtag.backend.common.enums.Severity;
 import com.trashtag.backend.common.enums.WasteType;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateTrashTagRequest {
 
     @NotBlank(message = "Title is required")

@@ -17,19 +17,19 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
   const [activeTab, setActiveTab] = useState<'before' | 'after' | 'split'>('split');
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl p-4 space-y-3">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+    <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl p-4 space-y-3">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
           <Camera className="w-4 h-4 text-emerald-400" />
           <span>Before / After Evidence Gallery</span>
         </h3>
 
         {afterImageUrl && (
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-[11px]">
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800 text-[11px]">
             <button
               onClick={() => setActiveTab('split')}
               className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                activeTab === 'split' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                activeTab === 'split' ? 'bg-emerald-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               Side-by-Side
@@ -37,7 +37,7 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
             <button
               onClick={() => setActiveTab('before')}
               className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                activeTab === 'before' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                activeTab === 'before' ? 'bg-amber-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               Before Only
@@ -45,7 +45,7 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
             <button
               onClick={() => setActiveTab('after')}
               className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                activeTab === 'after' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                activeTab === 'after' ? 'bg-purple-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               After Only
@@ -58,7 +58,7 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[260px]">
         {/* BEFORE IMAGE */}
         {(activeTab === 'split' || activeTab === 'before') && (
-          <div className="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 group h-64">
+          <div className="relative rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 group h-64">
             {beforeImageUrl ? (
               <img
                 src={beforeImageUrl}
@@ -80,7 +80,7 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
         {/* AFTER IMAGE */}
         {afterImageUrl ? (
           (activeTab === 'split' || activeTab === 'after') && (
-            <div className="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 group h-64">
+            <div className="relative rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 group h-64">
               <img
                 src={afterImageUrl}
                 alt={`After - ${title}`}
@@ -94,9 +94,9 @@ export const BeforeAfterViewer: React.FC<BeforeAfterViewerProps> = ({
           )
         ) : (
           activeTab === 'split' && (
-            <div className="relative rounded-xl overflow-hidden bg-slate-950/60 border border-slate-800 border-dashed flex flex-col items-center justify-center text-center p-6 text-slate-400 gap-2 h-64">
+            <div className="relative rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 border-dashed flex flex-col items-center justify-center text-center p-6 text-slate-600 dark:text-slate-400 gap-2 h-64">
               <Sparkles className="w-8 h-8 text-emerald-400/50 animate-pulse" />
-              <span className="text-xs font-semibold text-slate-300">After Evidence Pending</span>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">After Evidence Pending</span>
               <p className="text-[11px] text-slate-500 max-w-xs">
                 Photo will be updated once waste recovery and site transformation are completed.
               </p>

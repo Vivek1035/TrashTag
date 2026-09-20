@@ -7,6 +7,7 @@ export interface UserProfile {
   name: string;
   email: string;
   role: 'USER' | 'VERIFIER' | 'ORGANIZATION' | 'ADMIN';
+  avatarUrl?: string;
 }
 
 interface AuthContextType {

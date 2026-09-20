@@ -61,8 +61,9 @@ public class TransformationService {
                         .beforeImageUrl(tag.getPrimaryImageUrl())
                         .build());
 
-        transformation.setPreventionStrategy(request.getStrategyName());
-        transformation.setTransformationType(request.getStrategyName());
+        String strategyName = request.getStrategyName() != null ? request.getStrategyName() : "Community Greening";
+        transformation.setPreventionStrategy(strategyName);
+        transformation.setTransformationType(strategyName);
         transformation.setSubmittedBy(userId);
         if (request.getStrategyReason() != null) {
             transformation.setDescription("Strategy Reason: " + request.getStrategyReason());
@@ -110,7 +111,11 @@ public class TransformationService {
                         .beforeImageUrl(tag.getPrimaryImageUrl())
                         .build());
 
-        transformation.setTransformationType(request.getTransformationType());
+        if (request.getTransformationType() != null && !request.getTransformationType().isBlank()) {
+            transformation.setTransformationType(request.getTransformationType());
+        } else if (transformation.getTransformationType() == null) {
+            transformation.setTransformationType("Community Greening");
+        }
         transformation.setDescription(request.getDescription());
         transformation.setAfterImageUrl(request.getAfterImageUrl());
         transformation.setTransformedAt(now);

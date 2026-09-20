@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { RecoveryStatus, TrashTag } from '@/types/trashtag';
 import { verifyTrashTagApi } from '@/services/api';
+import { useAuth } from '@/context/AuthContext';
 import { ShieldCheck, PlusCircle, PlayCircle, Sparkles, AlertTriangle, ArrowRight, RefreshCw, Eye, CheckCircle2 } from 'lucide-react';
 
 interface NextActionCalloutProps {
@@ -12,17 +13,25 @@ interface NextActionCalloutProps {
 }
 
 export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onStatusUpdated }) => {
+  const { user, token } = useAuth();
   const [verifying, setVerifying] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Handle instant verification (Verifier/Admin action)
+  // Verifier / Admin permission check
+  const isVerifierOrAdmin = user?.role === 'VERIFIER' || user?.role === 'ADMIN' || user?.role === 'ORGANIZATION';
+
+  // Handle verification (Verifier/Admin action)
   const handleVerify = async () => {
+    if (!isVerifierOrAdmin && user) {
+      setErrorMsg('Only a Field Verifier or Community Admin can verify hotspot reports and recovery audits.');
+      return;
+    }
+
     setVerifying(true);
     setErrorMsg(null);
     try {
-      // Use stored dev token or mock verifier call
-      const token = localStorage.getItem('trashtag_token') || 'dev_verifier_token';
-      await verifyTrashTagApi(tag.id, token);
+      const authToken = token || localStorage.getItem('trashtag_token') || 'dev_verifier_token';
+      await verifyTrashTagApi(tag.id, authToken);
       if (onStatusUpdated) onStatusUpdated();
     } catch (err: any) {
       console.error('Failed to verify hotspot:', err);
@@ -42,7 +51,7 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <AlertTriangle className="w-3.5 h-3.5" /> Next Recommended Action
               </span>
               <h3 className="text-base font-bold text-white">Awaiting Verification</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Field verifier or community admin must confirm hotspot coordinates and severity.
               </p>
             </div>
@@ -65,12 +74,12 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <ShieldCheck className="w-3.5 h-3.5" /> Next Recommended Action
               </span>
               <h3 className="text-base font-bold text-white">Mobilize Cleanup Mission</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Hotspot verified! Create a cleanup mission to recruit volunteers and schedule waste recovery.
               </p>
             </div>
             <Link
-              href={`/missions/new?tagId=${tag.id}`}
+              href="/missions"
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
@@ -88,12 +97,12 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <PlayCircle className="w-3.5 h-3.5 animate-pulse" /> Mission Active
               </span>
               <h3 className="text-base font-bold text-white">Open Field Recovery Mode</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Cleanup team deployed! Track live volunteer check-ins and log recovered waste items.
               </p>
             </div>
             <Link
-              href={`/missions/${tag.id}/field`}
+              href={`/field/${tag.id}`}
               className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
             >
               <PlayCircle className="w-4 h-4" />
@@ -110,16 +119,17 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <CheckCircle2 className="w-3.5 h-3.5" /> Recovery Audit
               </span>
               <h3 className="text-base font-bold text-white">Awaiting Recovery Verification</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Waste collected! Audit before/after photo evidence and total weight recovered.
               </p>
             </div>
             <button
               onClick={handleVerify}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
+              disabled={verifying}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Verify Recovery Audit</span>
+              <span>{verifying ? 'Verifying...' : 'Verify Recovery Audit'}</span>
             </button>
           </div>
         );
@@ -133,12 +143,12 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <Sparkles className="w-3.5 h-3.5" /> Site Transformation
               </span>
               <h3 className="text-base font-bold text-white">Create Prevention Strategy & Garden Plan</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Prevent re-dumping by repurposing site into a community garden, park, or mural.
               </p>
             </div>
             <Link
-              href={`/transformations/new?tagId=${tag.id}`}
+              href={`/transformation/${tag.id}`}
               className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
             >
               <Sparkles className="w-4 h-4" />
@@ -157,12 +167,12 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <Eye className="w-3.5 h-3.5" /> Active Surveillance
               </span>
               <h3 className="text-base font-bold text-white">30/60/90-Day Site Monitoring</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Site transformed! Conduct periodic surveillance checks to maintain zero waste.
               </p>
             </div>
             <Link
-              href={`/monitoring/${tag.id}`}
+              href="/monitoring"
               className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-lg shadow-teal-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
             >
               <Eye className="w-4 h-4" />
@@ -179,12 +189,12 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Action Required
               </span>
               <h3 className="text-base font-bold text-white">Create New Recovery Mission</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 Hotspot reopened due to fresh dumping. Re-deploy cleanup team immediately.
               </p>
             </div>
             <Link
-              href={`/missions/new?tagId=${tag.id}`}
+              href="/missions"
               className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/25 flex items-center gap-2 shrink-0 transition-all hover:scale-105 active:scale-95"
             >
               <RefreshCw className="w-4 h-4" />
@@ -199,11 +209,11 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
   };
 
   return (
-    <div className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 p-5 rounded-2xl shadow-xl relative overflow-hidden">
+    <div className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
 
       {errorMsg && (
-        <div className="mb-3 text-xs text-red-400 bg-red-950/60 p-2.5 rounded-lg border border-red-800/60">
+        <div className="mb-3 text-xs text-red-400 bg-red-50/80 dark:bg-red-950/60 p-2.5 rounded-lg border border-red-800/60">
           {errorMsg}
         </div>
       )}
@@ -212,4 +222,3 @@ export const NextActionCallout: React.FC<NextActionCalloutProps> = ({ tag, onSta
     </div>
   );
 };
-

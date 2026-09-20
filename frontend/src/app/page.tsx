@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { UserNavHeader } from '@/components/layout/UserNavHeader';
+import { AuthModal } from '@/components/auth/AuthModal';
+import { Github, Linkedin } from 'lucide-react';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface Metric {
@@ -41,12 +44,12 @@ const METRICS: Metric[] = [
 ];
 
 const LIFECYCLE: LifecycleStage[] = [
-  { id: 'DETECT', label: 'Detect', icon: '🔭', description: 'Community members identify and photograph illegal dump sites with GPS location data.', color: 'text-red-400', bg: 'bg-red-950/60 border-red-800/50' },
+  { id: 'DETECT', label: 'Detect', icon: '🔭', description: 'Community members identify and photograph illegal dump sites with GPS location data.', color: 'text-red-400', bg: 'bg-red-50/80 dark:bg-red-950/60 border-red-800/50' },
   { id: 'TAG', label: 'Tag', icon: '🏷️', description: 'The site receives a unique TrashTag ID. AI classifies waste type and estimates severity.', color: 'text-orange-400', bg: 'bg-orange-950/60 border-orange-800/50' },
-  { id: 'MOBILIZE', label: 'Mobilize', icon: '👥', description: 'Verified reports trigger cleanup missions. Volunteers register, coordinate and prepare.', color: 'text-amber-400', bg: 'bg-amber-950/60 border-amber-800/50' },
-  { id: 'RECOVER', label: 'Recover', icon: '♻️', description: 'Field teams log GPS-verified cleanup evidence. Waste records submitted for verifier review.', color: 'text-emerald-400', bg: 'bg-emerald-950/60 border-emerald-800/50' },
-  { id: 'PREVENT', label: 'Prevent', icon: '🛡️', description: 'AI generates site-specific prevention strategies. Transformation plans are selected and executed.', color: 'text-teal-400', bg: 'bg-teal-950/60 border-teal-800/50' },
-  { id: 'MONITOR', label: 'Monitor', icon: '🔎', description: '30, 60 and 90-day checkpoints verify the site stays clean. Clean sites reach SUSTAINED status.', color: 'text-sky-400', bg: 'bg-sky-950/60 border-sky-800/50' },
+  { id: 'MOBILIZE', label: 'Mobilize', icon: '👥', description: 'Verified reports trigger cleanup missions. Volunteers register, coordinate and prepare.', color: 'text-amber-400', bg: 'bg-amber-50/80 dark:bg-amber-950/60 border-amber-800/50' },
+  { id: 'RECOVER', label: 'Recover', icon: '♻️', description: 'Field teams log GPS-verified cleanup evidence. Waste records submitted for verifier review.', color: 'text-emerald-400', bg: 'bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-800/50' },
+  { id: 'PREVENT', label: 'Prevent', icon: '🛡️', description: 'AI generates site-specific prevention strategies. Transformation plans are selected and executed.', color: 'text-teal-400', bg: 'bg-teal-50/80 dark:bg-teal-950/60 border-teal-800/50' },
+  { id: 'MONITOR', label: 'Monitor', icon: '🔎', description: '30, 60 and 90-day checkpoints verify the site stays clean. Clean sites reach SUSTAINED status.', color: 'text-sky-400', bg: 'bg-sky-50/80 dark:bg-sky-950/60 border-sky-800/50' },
 ];
 
 const MISSIONS: MissionCard[] = [
@@ -199,7 +202,7 @@ function MapPreview() {
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-[10px] text-slate-400">{label}</span>
+            <span className="text-[10px] text-slate-600 dark:text-slate-400">{label}</span>
           </div>
         ))}
       </div>
@@ -237,14 +240,14 @@ function AIPreviewCard() {
   ];
 
   return (
-    <div className="bg-[#060f0a] border border-emerald-900/50 rounded-2xl p-6 space-y-5">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-emerald-900/60 flex items-center justify-center text-lg">🤖</div>
+        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center text-lg">🤖</div>
         <div>
-          <div className="text-sm font-semibold text-emerald-300">Gemini AI Classification</div>
-          <div className="text-xs text-slate-500">TrashTag TT-D02 · HSR Layout E-Waste</div>
+          <div className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">Gemini AI Classification</div>
+          <div className="text-xs text-slate-600 dark:text-slate-300">TrashTag TT-D02 · HSR Layout E-Waste</div>
         </div>
-        <div className="ml-auto px-2 py-0.5 bg-amber-900/40 border border-amber-700/40 rounded text-[10px] text-amber-400 font-mono">AI ESTIMATE</div>
+        <div className="ml-auto px-2 py-0.5 bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700/60 rounded text-[10px] text-amber-900 dark:text-amber-300 font-mono font-bold">AI ESTIMATE</div>
       </div>
 
       {/* Waste categories */}
@@ -252,10 +255,10 @@ function AIPreviewCard() {
         {categories.map(({ label, pct, color }) => (
           <div key={label} className="space-y-1">
             <div className="flex justify-between text-xs">
-              <span className="text-slate-400">{label}</span>
+              <span className="text-slate-700 dark:text-slate-300 font-medium">{label}</span>
               <span style={{ color }} className="font-mono font-semibold">{pct}%</span>
             </div>
-            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-1000"
                 style={{ width: phase >= 1 ? `${pct}%` : '0%', backgroundColor: color }}
@@ -266,34 +269,34 @@ function AIPreviewCard() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-900/60 rounded-xl p-3">
-          <div className="text-[10px] text-slate-500 mb-1">SEVERITY ESTIMATE</div>
-          <div className="text-red-400 font-bold text-lg">CRITICAL</div>
-          <div className="text-[10px] text-slate-600 mt-0.5">Confidence 94%</div>
+        <div className="bg-slate-100 dark:bg-slate-800/80 rounded-xl p-3 border border-slate-200 dark:border-slate-700">
+          <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium mb-1">SEVERITY ESTIMATE</div>
+          <div className="text-red-600 dark:text-red-400 font-bold text-lg">CRITICAL</div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Confidence 94%</div>
         </div>
-        <div className="bg-slate-900/60 rounded-xl p-3">
-          <div className="text-[10px] text-slate-500 mb-1">RISK SCORE</div>
-          <div className="text-amber-400 font-bold text-lg">95/100</div>
-          <div className="text-[10px] text-slate-600 mt-0.5">Soil leaching risk HIGH</div>
+        <div className="bg-slate-100 dark:bg-slate-800/80 rounded-xl p-3 border border-slate-200 dark:border-slate-700">
+          <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium mb-1">RISK SCORE</div>
+          <div className="text-amber-600 dark:text-amber-400 font-bold text-lg">95/100</div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Soil leaching risk HIGH</div>
         </div>
       </div>
 
       {/* Prevention recommendations */}
       <div className="space-y-2">
-        <div className="text-xs text-slate-500 font-medium">AI PREVENTION RECOMMENDATIONS</div>
+        <div className="text-xs text-slate-600 dark:text-slate-300 font-semibold">AI PREVENTION RECOMMENDATIONS</div>
         {[
           'Install CPCB-certified e-waste collection hub',
           'Deploy perimeter CCTV deterrence system',
           'Community awareness campaign on e-waste',
         ].map((r, i) => (
-          <div key={i} className={`flex items-start gap-2 text-xs text-slate-300 transition-all duration-500 ${phase >= 2 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} style={{ transitionDelay: `${i * 100}ms` }}>
-            <span className="text-emerald-500 mt-0.5 shrink-0">→</span>
+          <div key={i} className={`flex items-start gap-2 text-xs text-slate-800 dark:text-slate-200 font-medium transition-all duration-500 ${phase >= 2 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} style={{ transitionDelay: `${i * 100}ms` }}>
+            <span className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0">→</span>
             <span>{r}</span>
           </div>
         ))}
       </div>
 
-      <div className="text-[10px] text-slate-600 border-t border-slate-800 pt-3">
+      <div className="text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-3">
         ⚠ AI estimates — not ground truth. Human verification required.
       </div>
     </div>
@@ -309,18 +312,18 @@ function MonitoringPreview() {
   ];
 
   return (
-    <div className="bg-[#060f0a] border border-sky-900/50 rounded-2xl p-6 space-y-5">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-sm font-semibold text-sky-300">Site Monitoring</div>
-          <div className="text-xs text-slate-500">Jayanagar Community Garden · TT-D08</div>
+          <div className="text-sm font-semibold text-sky-700 dark:text-sky-400">Site Monitoring</div>
+          <div className="text-xs text-slate-600 dark:text-slate-300">Jayanagar Community Garden · TT-D08</div>
         </div>
-        <div className="px-2 py-0.5 bg-emerald-900/40 border border-emerald-700/40 rounded text-[10px] text-emerald-400 font-mono">MONITORING</div>
+        <div className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 rounded text-[10px] text-emerald-800 dark:text-emerald-300 font-mono font-bold">MONITORING</div>
       </div>
 
       <div className="relative">
         {/* Timeline bar */}
-        <div className="absolute top-5 left-8 right-8 h-0.5 bg-slate-700" />
+        <div className="absolute top-5 left-8 right-8 h-0.5 bg-slate-300 dark:bg-slate-700" />
         <div className="absolute top-5 left-8 h-0.5 bg-emerald-500 transition-all duration-1000" style={{ width: '60%' }} />
 
         <div className="flex justify-between relative">
@@ -328,19 +331,19 @@ function MonitoringPreview() {
             <div key={cp.day} className="flex flex-col items-center gap-2">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 text-lg z-10 ${
                 cp.status === 'COMPLETED' && cp.clean
-                  ? 'bg-emerald-900 border-emerald-500'
+                  ? 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-700 dark:text-emerald-400'
                   : cp.status === 'PENDING'
-                    ? 'bg-slate-800 border-slate-600'
-                    : 'bg-red-900 border-red-500'
+                    ? 'bg-slate-100 dark:bg-slate-800 border-slate-400 dark:border-slate-600 text-slate-600 dark:text-slate-400'
+                    : 'bg-red-100 dark:bg-red-950 border-red-500 text-red-700 dark:text-red-400'
               }`}>
                 {cp.status === 'COMPLETED' ? (cp.clean ? '✓' : '✗') : '⏱'}
               </div>
               <div className="text-center">
-                <div className="text-xs font-bold text-slate-300">{cp.day}d</div>
-                <div className="text-[10px] text-slate-500">{cp.date}</div>
-                <div className={`text-[10px] font-medium ${
-                  cp.status === 'COMPLETED' && cp.clean ? 'text-emerald-400' :
-                  cp.status === 'PENDING' ? 'text-slate-500' : 'text-red-400'
+                <div className="text-xs font-bold text-slate-900 dark:text-slate-200">{cp.day}d</div>
+                <div className="text-[10px] text-slate-600 dark:text-slate-400">{cp.date}</div>
+                <div className={`text-[10px] font-semibold ${
+                  cp.status === 'COMPLETED' && cp.clean ? 'text-emerald-700 dark:text-emerald-400' :
+                  cp.status === 'PENDING' ? 'text-slate-600 dark:text-slate-400' : 'text-red-700 dark:text-red-400'
                 }`}>
                   {cp.status === 'COMPLETED' ? 'Clean ✓' : 'Upcoming'}
                 </div>
@@ -351,32 +354,32 @@ function MonitoringPreview() {
       </div>
 
       <div className="grid grid-cols-3 gap-2">
-        <div className="bg-emerald-950/40 border border-emerald-900/40 rounded-lg p-2.5 text-center">
-          <div className="text-emerald-400 font-bold text-base">118 kg</div>
-          <div className="text-[10px] text-slate-500">Recovered</div>
+        <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 rounded-lg p-2.5 text-center">
+          <div className="text-emerald-700 dark:text-emerald-400 font-bold text-base">118 kg</div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-300 font-medium">Recovered</div>
         </div>
-        <div className="bg-slate-900/60 border border-slate-700/40 rounded-lg p-2.5 text-center">
-          <div className="text-sky-400 font-bold text-base">60</div>
-          <div className="text-[10px] text-slate-500">Days Clean</div>
+        <div className="bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-center">
+          <div className="text-sky-700 dark:text-sky-400 font-bold text-base">60</div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-300 font-medium">Days Clean</div>
         </div>
-        <div className="bg-slate-900/60 border border-slate-700/40 rounded-lg p-2.5 text-center">
-          <div className="text-amber-400 font-bold text-base">30d</div>
-          <div className="text-[10px] text-slate-500">Until Final</div>
+        <div className="bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-center">
+          <div className="text-amber-700 dark:text-amber-400 font-bold text-base">30d</div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-300 font-medium">Until Final</div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-900/40 rounded-lg p-3">
-        <span className="text-emerald-400 text-base">🌱</span>
-        <span>Site remains clean after 60 days. Final 90-day checkpoint on Oct 18 will confirm <strong className="text-emerald-400">SUSTAINED</strong> status.</span>
+      <div className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/60 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+        <span className="text-emerald-600 dark:text-emerald-400 text-base">🌱</span>
+        <span>Site remains clean after 60 days. Final 90-day checkpoint on Oct 18 will confirm <strong className="text-emerald-700 dark:text-emerald-400">SUSTAINED</strong> status.</span>
       </div>
     </div>
   );
 }
 
-// ── Main Landing Page ─────────────────────────────────────────────────────────
 export default function LandingPage() {
   const [activeStage, setActiveStage] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -385,7 +388,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#060d0f] text-slate-100 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#060d0f] text-slate-900 dark:text-slate-100 transition-colors duration-200 overflow-x-hidden">
 
       {/* ── CSS Animations ──────────────────────────────────────────────────── */}
       <style jsx global>{`
@@ -414,13 +417,21 @@ export default function LandingPage() {
         .animate-float-up { animation: float-up 3s ease-in-out infinite; }
         .animate-glow { animation: glow-pulse 3s ease-in-out infinite; }
         .animate-tag-in { animation: tag-in 0.6s ease-out forwards; }
-        .hero-gradient {
+        :root.dark .hero-gradient, html.dark .hero-gradient {
           background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.12) 0%, transparent 70%),
                       radial-gradient(ellipse 50% 40% at 80% 50%, rgba(20,184,166,0.08) 0%, transparent 60%),
                       #060d0f;
         }
-        .section-gradient {
+        :root:not(.dark) .hero-gradient, html:not(.dark) .hero-gradient {
+          background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.08) 0%, transparent 70%),
+                      radial-gradient(ellipse 50% 40% at 80% 50%, rgba(20,184,166,0.05) 0%, transparent 60%),
+                      #f8fafc;
+        }
+        :root.dark .section-gradient, html.dark .section-gradient {
           background: linear-gradient(180deg, #060d0f 0%, #07100d 50%, #060d0f 100%);
+        }
+        :root:not(.dark) .section-gradient, html:not(.dark) .section-gradient {
+          background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
         }
         .card-hover {
           transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -445,30 +456,11 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* ── NAVBAR ───────────────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#060d0f]/90 backdrop-blur-md border-b border-emerald-950/60">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-black font-bold text-sm">TT</div>
-            <span className="font-bold text-lg tracking-tight">TrashTag</span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-slate-400">
-            <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">How It Works</a>
-            <a href="#lifecycle" className="hover:text-emerald-400 transition-colors">Lifecycle</a>
-            <a href="#impact" className="hover:text-emerald-400 transition-colors">Impact</a>
-            <a href="#missions" className="hover:text-emerald-400 transition-colors">Missions</a>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/explore" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">Explore Map</Link>
-            <Link href="/dashboard" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors">
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
+
+
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="hero-gradient min-h-screen flex items-center pt-16 relative overflow-hidden">
+      <section className="hero-gradient min-h-[calc(100vh-4rem)] flex items-center py-12 lg:py-16 relative overflow-hidden">
         {/* Floating particles */}
         {mounted && [0,1,2,3,4].map(i => (
           <div key={i}
@@ -490,28 +482,28 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center w-full">
           {/* Left — Copy */}
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-950/60 border border-emerald-800/50 rounded-full text-xs text-emerald-400">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50/80 dark:bg-emerald-950/60 border border-emerald-800/50 rounded-full text-xs text-emerald-400">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               Environmental Recovery Platform · Bengaluru, India
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
-              <span className="text-white">Tag the</span>{' '}
+              <span className="text-slate-900 dark:text-white">Tag the</span>{' '}
               <span className="text-emerald-400">Problem.</span>
               <br />
-              <span className="text-white">Track the</span>{' '}
+              <span className="text-slate-900 dark:text-white">Track the</span>{' '}
               <span className="text-teal-400">Recovery.</span>
               <br />
-              <span className="text-white">Prevent the</span>{' '}
+              <span className="text-slate-900 dark:text-white">Prevent the</span>{' '}
               <span className="text-amber-400">Return.</span>
             </h1>
 
-            <p className="text-lg text-slate-400 leading-relaxed max-w-xl">
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
               TrashTag turns local pollution hotspots into community recovery missions, verified cleanups, and long-term prevention plans — powered by GPS evidence, AI analysis, and 90-day monitoring.
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Link href="/explore"
+              <Link href="/report"
                 className="group inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-emerald-900/50 text-base">
                 <span>🏷️</span>
                 Tag a Trash Hotspot
@@ -549,15 +541,15 @@ export default function LandingPage() {
             <MapPreview />
 
             {/* Floating tag cards */}
-            <div className="absolute -right-4 top-8 bg-[#060f0a] border border-red-800/50 rounded-xl p-3 shadow-2xl max-w-[160px]">
+            <div className="absolute -right-4 top-8 bg-white dark:bg-[#060f0a] border border-red-800/50 rounded-xl p-3 shadow-2xl max-w-[160px]">
               <div className="text-xs text-red-400 font-semibold">📍 TT-D13</div>
-              <div className="text-xs text-slate-300 mt-0.5">Construction rubble</div>
+              <div className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">Construction rubble</div>
               <div className="text-xs text-slate-500">Whitefield · CRITICAL</div>
             </div>
 
-            <div className="absolute -left-4 bottom-16 bg-[#060f0a] border border-emerald-800/50 rounded-xl p-3 shadow-2xl max-w-[160px]">
+            <div className="absolute -left-4 bottom-16 bg-white dark:bg-[#060f0a] border border-emerald-800/50 rounded-xl p-3 shadow-2xl max-w-[160px]">
               <div className="text-xs text-emerald-400 font-semibold">✓ TT-D11</div>
-              <div className="text-xs text-slate-300 mt-0.5">SUSTAINED after 90d</div>
+              <div className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">SUSTAINED after 90d</div>
               <div className="text-xs text-slate-500">Malleswaram · Clean</div>
             </div>
           </div>
@@ -568,21 +560,21 @@ export default function LandingPage() {
       <section className="section-gradient py-28 relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 space-y-4">
-            <div className="inline-block px-3 py-1 bg-red-950/50 border border-red-800/40 rounded-full text-xs text-red-400 font-medium">THE PROBLEM</div>
-            <h2 className="text-4xl font-bold text-white">Waste doesn't disappear when we look away.</h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            <div className="inline-block px-3 py-1 bg-red-50 dark:bg-red-950/50 border border-red-800/40 rounded-full text-xs text-red-400 font-medium">THE PROBLEM</div>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Waste doesn't disappear when we look away.</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Urban pollution hotspots persist because there is no system to tag them, track cleanup accountability, or prevent recurrence.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {PROBLEM_STATS.map((s, i) => (
-              <div key={i} className="relative bg-gradient-to-b from-slate-900/60 to-slate-950/60 border border-slate-800/50 rounded-2xl p-6 text-center card-hover">
+              <div key={i} className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center card-hover shadow-sm">
                 <div className="text-4xl mb-3">{s.icon}</div>
-                <div className="text-3xl font-extrabold text-white mb-2">
+                <div className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
                   {mounted ? <AnimatedCounter target={s.value} /> : s.value}
                 </div>
-                <div className="text-sm text-slate-400 leading-snug">{s.label}</div>
+                <div className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-snug">{s.label}</div>
               </div>
             ))}
           </div>
@@ -593,10 +585,10 @@ export default function LandingPage() {
               { icon: '🔄', title: 'No Prevention', desc: 'Even when cleaned, sites revert. Without root-cause analysis and community ownership, waste returns within 90 days.' },
               { icon: '📊', title: 'No Measurement', desc: 'Impact claims are unverifiable. Without GPS evidence and verifier audits, environmental impact data is meaningless.' },
             ].map((p) => (
-              <div key={p.title} className="bg-slate-900/40 border border-slate-800/40 rounded-2xl p-6 space-y-3 card-hover">
+              <div key={p.title} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-3 card-hover shadow-sm">
                 <div className="text-3xl">{p.icon}</div>
-                <h3 className="text-lg font-semibold text-white">{p.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{p.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -604,13 +596,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 2. HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-28 bg-[#060d0f] relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/10 via-transparent to-transparent" />
+      <section id="how-it-works" className="py-28 bg-slate-50 dark:bg-[#060d0f] relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/10 via-transparent to-transparent opacity-50 dark:opacity-100" />
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center mb-16 space-y-4">
-            <div className="inline-block px-3 py-1 bg-emerald-950/50 border border-emerald-800/40 rounded-full text-xs text-emerald-400 font-medium">HOW IT WORKS</div>
-            <h2 className="text-4xl font-bold text-white">From sighting to sustained solution.</h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            <div className="inline-block px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800/40 rounded-full text-xs text-emerald-800 dark:text-emerald-400 font-semibold">HOW IT WORKS</div>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">From sighting to sustained solution.</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               TrashTag closes the loop — from initial report all the way through verified recovery, AI-guided prevention, and long-term monitoring.
             </p>
           </div>
@@ -622,13 +614,13 @@ export default function LandingPage() {
               { num: '03', title: 'Recover & Log', desc: 'Field teams submit GPS-stamped evidence and waste weight records. Waste recovery is fully auditable.', icon: '♻️', color: 'sky' },
               { num: '04', title: 'Prevent & Monitor', desc: 'AI generates prevention plans. 30/60/90-day checkpoints verify the site stays clean long-term.', icon: '🛡️', color: 'amber' },
             ].map((step) => (
-              <div key={step.num} className="relative bg-gradient-to-b from-slate-900/60 to-slate-950/40 border border-slate-800/50 rounded-2xl p-6 space-y-4 card-hover">
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl text-2xl bg-${step.color}-950/50 border border-${step.color}-800/40`}>
+              <div key={step.num} className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 card-hover shadow-sm">
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl text-2xl bg-${step.color}-100 dark:bg-${step.color}-950/80 border border-${step.color}-200 dark:border-${step.color}-800/60`}>
                   {step.icon}
                 </div>
-                <div className="absolute top-5 right-5 text-5xl font-black text-slate-800/40 font-mono">{step.num}</div>
-                <h3 className="text-base font-semibold text-white">{step.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{step.desc}</p>
+                <div className="absolute top-5 right-5 text-5xl font-black text-slate-200 dark:text-slate-700/60 font-mono">{step.num}</div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white">{step.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -639,9 +631,9 @@ export default function LandingPage() {
       <section id="lifecycle" className="py-28 section-gradient relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 space-y-4">
-            <div className="inline-block px-3 py-1 bg-teal-950/50 border border-teal-800/40 rounded-full text-xs text-teal-400 font-medium">RECOVERY LIFECYCLE</div>
-            <h2 className="text-4xl font-bold text-white">Every TrashTag follows a structured lifecycle.</h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            <div className="inline-block px-3 py-1 bg-teal-50 dark:bg-teal-950/50 border border-teal-800/40 rounded-full text-xs text-teal-400 font-medium">RECOVERY LIFECYCLE</div>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Every TrashTag follows a structured lifecycle.</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               No shortcuts. No unverified claims. A site is only declared SUSTAINED after GPS-verified evidence at every stage.
             </p>
           </div>
@@ -670,8 +662,8 @@ export default function LandingPage() {
           <div className={`lg:block max-w-2xl mx-auto text-center mb-12 p-6 rounded-2xl border transition-all duration-300 ${LIFECYCLE[activeStage].bg}`}>
             <div className="text-4xl mb-3">{LIFECYCLE[activeStage].icon}</div>
             <div className={`text-sm font-bold tracking-widest mb-2 ${LIFECYCLE[activeStage].color}`}>{LIFECYCLE[activeStage].id}</div>
-            <h3 className="text-xl font-semibold text-white mb-2">{LIFECYCLE[activeStage].label}</h3>
-            <p className="text-slate-300 text-sm leading-relaxed">{LIFECYCLE[activeStage].description}</p>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{LIFECYCLE[activeStage].label}</h3>
+            <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{LIFECYCLE[activeStage].description}</p>
           </div>
 
           {/* Mobile — cards grid */}
@@ -682,7 +674,7 @@ export default function LandingPage() {
                   <span className="text-2xl">{stage.icon}</span>
                   <span className={`text-xs font-bold tracking-widest ${stage.color}`}>{stage.id}</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">{stage.description}</p>
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{stage.description}</p>
               </div>
             ))}
           </div>
@@ -700,9 +692,9 @@ export default function LandingPage() {
               ['SUSTAINED', '#22c55e'],
               ['REOPENED', '#dc2626'],
             ].map(([label, color]) => (
-              <div key={label} className="flex items-center gap-1.5 px-3 py-1 bg-slate-900/60 border border-slate-800/40 rounded-full">
+              <div key={label} className="flex items-center gap-1.5 px-3 py-1 bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/40 rounded-full">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                <span className="text-xs text-slate-400 font-mono">{label}</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-mono">{label}</span>
               </div>
             ))}
           </div>
@@ -710,13 +702,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4. INTERACTIVE MAP PREVIEW ───────────────────────────────────────── */}
-      <section className="py-28 bg-[#060d0f]">
+      <section className="py-28 bg-slate-50 dark:bg-[#060d0f]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <div className="inline-block px-3 py-1 bg-sky-950/50 border border-sky-800/40 rounded-full text-xs text-sky-400 font-medium">RECOVERY MAP</div>
-              <h2 className="text-4xl font-bold text-white">Every hotspot on the map. Every status tracked.</h2>
-              <p className="text-lg text-slate-400 leading-relaxed">
+              <div className="inline-block px-3 py-1 bg-sky-50 dark:bg-sky-950/50 border border-sky-800/40 rounded-full text-xs text-sky-400 font-medium">RECOVERY MAP</div>
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Every hotspot on the map. Every status tracked.</h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                 The live recovery map shows every TrashTag in real time — color-coded by lifecycle status. Click any marker to see the full recovery story, evidence photos, waste records, and mission details.
               </p>
               <div className="space-y-3">
@@ -726,7 +718,7 @@ export default function LandingPage() {
                   { icon: '📊', text: 'Aggregated impact metrics per location' },
                   { icon: '🏷️', text: 'Report new hotspots directly from the map' },
                 ].map(({ icon, text }) => (
-                  <div key={text} className="flex items-center gap-3 text-slate-300 text-sm">
+                  <div key={text} className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm">
                     <span className="text-lg">{icon}</span>
                     <span>{text}</span>
                   </div>
@@ -750,9 +742,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12">
             <div className="space-y-3">
-              <div className="inline-block px-3 py-1 bg-amber-950/50 border border-amber-800/40 rounded-full text-xs text-amber-400 font-medium">COMMUNITY MISSIONS</div>
-              <h2 className="text-4xl font-bold text-white">Join the next cleanup mission.</h2>
-              <p className="text-slate-400">Verified hotspots become coordinated missions. Volunteer, earn points, make measurable impact.</p>
+              <div className="inline-block px-3 py-1 bg-amber-50 dark:bg-amber-950/50 border border-amber-800/40 rounded-full text-xs text-amber-400 font-medium">COMMUNITY MISSIONS</div>
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Join the next cleanup mission.</h2>
+              <p className="text-slate-600 dark:text-slate-400">Verified hotspots become coordinated missions. Volunteer, earn points, make measurable impact.</p>
             </div>
             <div>
               <div className="demo-badge px-3 py-2 rounded-lg text-xs text-amber-400">
@@ -763,26 +755,26 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {MISSIONS.map((m) => (
-              <div key={m.tag} className="bg-gradient-to-b from-slate-900/60 to-slate-950/40 border border-slate-800/50 rounded-2xl p-5 space-y-4 card-hover">
+              <div key={m.tag} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 card-hover shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-slate-500">{m.tag}</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                  <span className="font-mono text-xs text-slate-500 dark:text-slate-400 font-bold">{m.tag}</span>
+                  <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     m.status === 'ACTIVE'
-                      ? 'bg-amber-900/60 text-amber-300 border border-amber-700/40'
-                      : 'bg-sky-900/60 text-sky-300 border border-sky-700/40'
+                      ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60'
+                      : 'bg-sky-100 dark:bg-sky-950/80 text-sky-900 dark:text-sky-300 border border-sky-300 dark:border-sky-700/60'
                   }`}>
                     {m.status}
                   </span>
                 </div>
-                <h3 className="font-semibold text-white text-base leading-snug">{m.title}</h3>
-                <div className="space-y-1.5 text-xs text-slate-400">
+                <h3 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">{m.title}</h3>
+                <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 font-medium">
                   <div className="flex items-center gap-2"><span>📍</span>{m.location}</div>
                   <div className="flex items-center gap-2"><span>🧤</span>{m.volunteers} volunteers joined</div>
                   <div className="flex items-center gap-2"><span>📅</span>{m.scheduled}</div>
                   <div className="flex items-center gap-2"><span>⚖️</span>Est. {m.waste}</div>
                 </div>
                 <Link href="/missions"
-                  className="block w-full text-center py-2 rounded-lg border border-emerald-800/50 text-emerald-400 hover:bg-emerald-900/30 text-sm transition-all">
+                  className="block w-full text-center py-2.5 rounded-xl border border-emerald-600 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 bg-emerald-50/50 dark:bg-emerald-950/30 text-sm font-bold transition-all">
                   {m.status === 'ACTIVE' ? 'View Mission' : 'Join Mission'}
                 </Link>
               </div>
@@ -791,7 +783,7 @@ export default function LandingPage() {
 
           <div className="text-center">
             <Link href="/missions"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-emerald-800/50 text-emerald-400 hover:bg-emerald-900/20 rounded-xl font-medium transition-all">
+              className="inline-flex items-center gap-2 px-6 py-3 border border-emerald-600 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl font-bold transition-all">
               View All Missions →
             </Link>
           </div>
@@ -799,7 +791,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 6. AI PREVENTION ──────────────────────────────────────────────────── */}
-      <section className="py-28 bg-[#060d0f] relative overflow-hidden">
+      <section className="py-28 bg-slate-50 dark:bg-[#060d0f] relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/5 via-transparent to-teal-950/5" />
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -807,9 +799,9 @@ export default function LandingPage() {
               <AIPreviewCard />
             </div>
             <div className="space-y-6 order-1 lg:order-2">
-              <div className="inline-block px-3 py-1 bg-emerald-950/50 border border-emerald-800/40 rounded-full text-xs text-emerald-400 font-medium">AI PREVENTION</div>
-              <h2 className="text-4xl font-bold text-white">AI that analyses the waste, not just detects it.</h2>
-              <p className="text-lg text-slate-400 leading-relaxed">
+              <div className="inline-block px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800/40 rounded-full text-xs text-emerald-800 dark:text-emerald-400 font-semibold">AI PREVENTION</div>
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white">AI that analyses the waste, not just detects it.</h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                 Powered by Gemini AI, TrashTag analyses uploaded evidence images to classify waste composition, estimate severity, and recommend site-specific prevention strategies — preventing recurrence, not just cleaning up.
               </p>
               <div className="space-y-4">
@@ -820,12 +812,12 @@ export default function LandingPage() {
                   { title: 'Human Verified', desc: 'AI outputs are estimates. Verifiers and organisations always review before any action.', icon: '✅' },
                 ].map((f) => (
                   <div key={f.title} className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-950/50 border border-emerald-900/40 flex items-center justify-center text-lg shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900/40 flex items-center justify-center text-lg shrink-0">
                       {f.icon}
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-white mb-0.5">{f.title}</div>
-                      <div className="text-sm text-slate-400">{f.desc}</div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">{f.title}</div>
+                      <div className="text-sm text-slate-600 dark:text-slate-400">{f.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -840,29 +832,29 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <div className="inline-block px-3 py-1 bg-sky-950/50 border border-sky-800/40 rounded-full text-xs text-sky-400 font-medium">LONG-TERM MONITORING</div>
-              <h2 className="text-4xl font-bold text-white">We don't celebrate until 90 days clean.</h2>
-              <p className="text-lg text-slate-400 leading-relaxed">
-                Recovery verification is only the beginning. Every transformed site receives 30, 60, and 90-day inspection checkpoints. A site is only declared <span className="text-emerald-400 font-semibold">SUSTAINED</span> after passing all three.
+              <div className="inline-block px-3 py-1 bg-sky-50 dark:bg-sky-950/50 border border-sky-300 dark:border-sky-800/40 rounded-full text-xs text-sky-800 dark:text-sky-400 font-semibold">LONG-TERM MONITORING</div>
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white">We don't celebrate until 90 days clean.</h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                Recovery verification is only the beginning. Every transformed site receives 30, 60, and 90-day inspection checkpoints. A site is only declared <span className="text-emerald-700 dark:text-emerald-400 font-bold">SUSTAINED</span> after passing all three.
               </p>
               <div className="space-y-4">
                 {[
-                  { day: '30d', desc: 'First checkpoint — confirm initial recovery holds', color: 'text-sky-400' },
-                  { day: '60d', desc: 'Mid-term — verify community ownership taking hold', color: 'text-teal-400' },
-                  { day: '90d', desc: 'Final — declare SUSTAINED or reopen for new mission', color: 'text-emerald-400' },
+                  { day: '30d', desc: 'First checkpoint — confirm initial recovery holds', color: 'text-sky-700 dark:text-sky-400' },
+                  { day: '60d', desc: 'Mid-term — verify community ownership taking hold', color: 'text-teal-700 dark:text-teal-400' },
+                  { day: '90d', desc: 'Final — declare SUSTAINED or reopen for new mission', color: 'text-emerald-700 dark:text-emerald-400' },
                 ].map((item) => (
                   <div key={item.day} className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl bg-slate-900 border border-slate-700/50 flex items-center justify-center font-bold text-sm ${item.color} shrink-0`}>
+                    <div className={`w-12 h-12 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700/50 flex items-center justify-center font-bold text-sm ${item.color} shrink-0 shadow-sm`}>
                       {item.day}
                     </div>
                     <div className="pt-1">
-                      <div className="text-sm text-slate-300">{item.desc}</div>
+                      <div className="text-sm text-slate-700 dark:text-slate-300 font-medium">{item.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="bg-amber-950/20 border border-amber-800/30 rounded-xl p-4 text-sm text-amber-300">
-                <span className="font-semibold">Sites that fail monitoring</span> — if waste returns, the site is marked <span className="text-red-400 font-mono">REOPENED</span> and a new recovery mission is triggered automatically.
+              <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-800/30 rounded-xl p-4 text-sm text-amber-900 dark:text-amber-300">
+                <span className="font-semibold">Sites that fail monitoring</span> — if waste returns, the site is marked <span className="text-red-700 dark:text-red-400 font-mono font-bold">REOPENED</span> and a new recovery mission is triggered automatically.
               </div>
             </div>
 
@@ -874,15 +866,15 @@ export default function LandingPage() {
       </section>
 
       {/* ── 8. IMPACT ──────────────────────────────────────────────────────────── */}
-      <section id="impact" className="py-28 bg-[#060d0f]">
+      <section id="impact" className="py-28 bg-slate-50 dark:bg-[#060d0f]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 space-y-4">
-            <div className="inline-block px-3 py-1 bg-teal-950/50 border border-teal-800/40 rounded-full text-xs text-teal-400 font-medium">PLATFORM IMPACT</div>
-            <h2 className="text-4xl font-bold text-white">Measurable. Verifiable. Transparent.</h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            <div className="inline-block px-3 py-1 bg-teal-50 dark:bg-teal-950/50 border border-teal-300 dark:border-teal-800/40 rounded-full text-xs text-teal-800 dark:text-teal-400 font-semibold">PLATFORM IMPACT</div>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Measurable. Verifiable. Transparent.</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Every number on TrashTag is backed by GPS evidence and human verification — not self-reported data.
             </p>
-            <div className="demo-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-amber-400">
+            <div className="demo-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-amber-800 dark:text-amber-400 font-medium">
               <span>⚠</span>
               <span>DEMO DATA — All numbers below are fictional. Generated for hackathon demonstration. No real impact claimed.</span>
             </div>
@@ -890,21 +882,21 @@ export default function LandingPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-12">
             {METRICS.map((m) => (
-              <div key={m.label} className="bg-gradient-to-b from-slate-900/60 to-slate-950/40 border border-slate-800/50 rounded-2xl p-5 text-center space-y-2 card-hover">
+              <div key={m.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 text-center space-y-2 card-hover shadow-sm">
                 <div className="text-3xl">{m.icon}</div>
                 <div className={`text-3xl font-extrabold ${m.color}`}>
                   {mounted ? <AnimatedCounter target={m.value} suffix={m.unit ? ` ${m.unit}` : ''} /> : m.value}
                 </div>
-                <div className="text-xs text-slate-400">{m.label}</div>
+                <div className="text-xs text-slate-600 dark:text-slate-300 font-semibold">{m.label}</div>
               </div>
             ))}
           </div>
 
           {/* Leaderboard preview */}
-          <div className="bg-gradient-to-b from-slate-900/60 to-slate-950/40 border border-slate-800/50 rounded-2xl p-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold text-white">🏆 Top Contributors · <span className="demo-badge px-1.5 py-0.5 rounded text-amber-400 text-xs font-mono">DEMO</span></h3>
-              <Link href="/leaderboard" className="text-xs text-emerald-400 hover:text-emerald-300">View Full Leaderboard →</Link>
+              <h3 className="font-bold text-slate-900 dark:text-white text-lg">🏆 Top Contributors · <span className="demo-badge px-1.5 py-0.5 rounded text-amber-800 dark:text-amber-400 text-xs font-mono">DEMO</span></h3>
+              <Link href="/leaderboard" className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300">View Full Leaderboard →</Link>
             </div>
             <div className="space-y-3">
               {[
@@ -912,18 +904,18 @@ export default function LandingPage() {
                 { rank: 2, name: '[DEMO] Priya Krishnan', score: 450, role: 'VERIFIER', kg: '280 kg', badges: ['🏆', '🔎'] },
                 { rank: 3, name: '[DEMO] Suresh Iyer', score: 380, role: 'USER', kg: '108 kg', badges: ['🏷️', '🧹', '🏆'] },
               ].map((u) => (
-                <div key={u.rank} className="flex items-center gap-4 py-3 border-b border-slate-800/50 last:border-0">
+                <div key={u.rank} className="flex items-center gap-4 py-3 border-b border-slate-200 dark:border-slate-800 last:border-0">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                    u.rank === 1 ? 'bg-amber-900/60 text-amber-300' :
-                    u.rank === 2 ? 'bg-slate-700/60 text-slate-300' :
-                    'bg-orange-900/40 text-orange-400'
+                    u.rank === 1 ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60' :
+                    u.rank === 2 ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700' :
+                    'bg-orange-100 dark:bg-orange-950/80 text-orange-900 dark:text-orange-300 border border-orange-300 dark:border-orange-700/60'
                   }`}>#{u.rank}</div>
                   <div className="flex-1">
-                    <div className="text-sm text-white font-medium">{u.name}</div>
-                    <div className="text-xs text-slate-500">{u.role} · {u.kg} recovered</div>
+                    <div className="text-sm text-slate-900 dark:text-white font-semibold">{u.name}</div>
+                    <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">{u.role} · {u.kg} recovered</div>
                   </div>
                   <div className="flex gap-1">{u.badges.map((b, i) => <span key={i} className="text-sm">{b}</span>)}</div>
-                  <div className="text-emerald-400 font-bold text-sm">{u.score} pts</div>
+                  <div className="text-emerald-700 dark:text-emerald-400 font-extrabold text-sm">{u.score} pts</div>
                 </div>
               ))}
             </div>
@@ -932,30 +924,30 @@ export default function LandingPage() {
       </section>
 
       {/* ── 9. FINAL CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-28 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#060d0f] via-emerald-950/20 to-[#060d0f]" />
+      <section className="py-28 relative overflow-hidden bg-slate-50 dark:bg-[#060d0f]">
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-100 via-emerald-50/30 to-slate-100 dark:from-[#060d0f] dark:via-emerald-950/20 dark:to-[#060d0f]" />
         <div className="absolute inset-0"
           style={{ backgroundImage: 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(16,185,129,0.08) 0%, transparent 70%)' }} />
 
         <div className="max-w-4xl mx-auto px-6 text-center relative space-y-8">
           <div className="text-6xl mb-4">🌍</div>
-          <h2 className="text-5xl font-extrabold text-white leading-tight">
+          <h2 className="text-5xl font-extrabold text-slate-900 dark:text-white leading-tight">
             Your city. Your hotspot.<br />
-            <span className="text-emerald-400">Your mission.</span>
+            <span className="text-emerald-600 dark:text-emerald-400">Your mission.</span>
           </h2>
-          <p className="text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
             Join TrashTag. Report a pollution hotspot in your neighbourhood. Track its recovery. Prevent its return. Be part of the community that holds the system accountable.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <Link href="/explore"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all text-base shadow-lg shadow-emerald-900/40 hover:shadow-emerald-800/60">
+            <Link href="/report"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all text-base shadow-lg shadow-emerald-900/20 dark:shadow-emerald-900/40 hover:shadow-emerald-800/60">
               <span>🏷️</span>
               Tag a Trash Hotspot
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link href="/explore"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-emerald-700/50 hover:border-emerald-500 text-emerald-300 hover:text-emerald-200 font-bold rounded-xl transition-all text-base">
+              className="inline-flex items-center gap-2 px-8 py-4 border border-emerald-600/50 dark:border-emerald-700/50 hover:border-emerald-500 text-emerald-800 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-emerald-200 font-bold rounded-xl transition-all text-base bg-white dark:bg-transparent shadow-sm">
               <span>🗺️</span>
               Explore Recovery Map
             </Link>
@@ -969,33 +961,58 @@ export default function LandingPage() {
               { href: '/missions', label: '🚀 All Missions' },
               { href: '/dashboard', label: '📊 Dashboard' },
             ].map(({ href, label }) => (
-              <Link key={href} href={href} className="text-sm text-slate-500 hover:text-emerald-400 transition-colors">{label}</Link>
+              <Link key={href} href={href} className="text-sm text-slate-600 dark:text-slate-500 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium transition-colors">{label}</Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-900 bg-[#040a07] py-10">
+      <footer className="border-t border-slate-200 dark:border-slate-900 bg-slate-100 dark:bg-[#040a07] py-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded bg-emerald-500 flex items-center justify-center text-black font-bold text-xs">TT</div>
-            <span className="font-semibold text-slate-300">TrashTag</span>
-            <span className="text-slate-600 text-sm">— Environmental Recovery Platform</span>
+            <div className="w-8 h-8 rounded-xl bg-[#062319] border border-emerald-500/50 flex items-center justify-center text-emerald-400 shrink-0 shadow-md">
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <span className="font-extrabold text-slate-900 dark:text-white text-xl tracking-tight">Trash<span className="text-emerald-500 dark:text-emerald-400">Tag</span></span>
+            <span className="text-slate-600 dark:text-slate-400 text-sm hidden sm:inline">- Environmental Recovery Platform</span>
           </div>
-          <div className="text-sm text-slate-600 text-center">
-            Built for hackathon demonstration. All demo data is fictional.
-            No real environmental impact claimed.
+          <div className="text-sm text-slate-700 dark:text-slate-300 text-center font-semibold">
+            Designed & Developed by <span className="text-slate-900 dark:text-white font-bold">Vivek Singh</span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-slate-500">
-            <Link href="/explore" className="hover:text-emerald-400 transition-colors">Map</Link>
-            <Link href="/missions" className="hover:text-emerald-400 transition-colors">Missions</Link>
-            <Link href="/leaderboard" className="hover:text-emerald-400 transition-colors">Leaderboard</Link>
-            <Link href="/timeline" className="hover:text-emerald-400 transition-colors">Timeline</Link>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/Vivek1035"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 px-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-500/50 transition-all shadow-sm flex items-center gap-2 text-xs font-semibold group"
+              title="GitHub Profile"
+            >
+              <Github className="w-4 h-4 text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors" />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/vivek-singh-087b46243/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 px-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-500/50 transition-all shadow-sm flex items-center gap-2 text-xs font-semibold group"
+              title="LinkedIn Profile"
+            >
+              <Linkedin className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors" />
+              <span>LinkedIn</span>
+            </a>
           </div>
         </div>
       </footer>
 
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        redirectTo="/dashboard"
+      />
     </div>
   );
 }
